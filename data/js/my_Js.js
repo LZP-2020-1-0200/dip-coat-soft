@@ -58,16 +58,28 @@ function addrows() {
 
 function convertFormToJSON(form) {
     var object = {};
-    form.forEach((value, key) => object[key] = value);
+    for (const [key, value] of form.entries()) {
+        if (!value)
+            break;
+        object[key] = value;
+
+    }
     console.log(JSON.stringify(object));
     return JSON.stringify(object);
+}
+
+function sendRequestButton(formID) {
+    $(document).ready(function () {
+        $.post(formID,function(response) {
+            alert(response);
+        });
+    });
 }
 
 $(document).ready(function () {
     $('#myform').submit(function (event) {
         event.preventDefault();
-        let myform = document.getElementById('myform');
-        let fd = new FormData(myform);
+        let fd = new FormData(document.getElementById('myform'));
 
         $.ajax({
             url: "/submit",
@@ -78,28 +90,13 @@ $(document).ready(function () {
                 alert(dataofconfirmation);
             },
 
-            error: function (er) {
-                alert('not ok');
-                console.log(convertFormToJSON(fd));
+            error: function (error) {
+                alert(error);
             }
         });
     });
 });
 
-
-$(document).ready(function () {
-    $('#go_to_top').submit(function (event) {
-        event.preventDefault();
-        $.ajax({
-            url: "/go_to_top",
-            type: 'POST',
-
-            sucess: function (response_data) {
-                alert(response_data);
-            }
-        });
-    });
-});
 
 
 function get_values_from_input() {
@@ -123,39 +120,25 @@ function get_values_from_input() {
     document.getElementById('ajaxtest').innerHTML = "Calculated time: " + h + m + s;
 }
 
-(function get_passed_time() {
-    $.ajax({
-        url: "/get_passed_time",
-        type: 'POST',
+// (function get_passed_time() {
+//     $.ajax({
+//         url: "/get_passed_time",
+//         type: 'POST',
 
-        success: function (response_seconds) {
-            let h = Math.floor(response_seconds / 3600);
-            let m = Math.floor(response_seconds % 3600 / 60);
-            let s = Math.floor(response_seconds % 3600 % 60);
+//         success: function (response_seconds) {
+//             let h = Math.floor(response_seconds / 3600);
+//             let m = Math.floor(response_seconds % 3600 / 60);
+//             let s = Math.floor(response_seconds % 3600 % 60);
 
-            h = h == 0 ? "00:" : h <= 9 ? "0" + h.toString() + ":" : h.toString() + ":";
-            m = m == 0 ? "00:" : m <= 9 ? "0" + m.toString() + ":" : m.toString() + ":";
-            s = s == 0 ? "00" : s <= 9 ? "0" + s.toString() : s.toString();
+//             h = h == 0 ? "00:" : h <= 9 ? "0" + h.toString() + ":" : h.toString() + ":";
+//             m = m == 0 ? "00:" : m <= 9 ? "0" + m.toString() + ":" : m.toString() + ":";
+//             s = s == 0 ? "00" : s <= 9 ? "0" + s.toString() : s.toString();
 
-            document.getElementById('uptime').innerHTML = h + m + s;
-        },
+//             document.getElementById('uptime').innerHTML = h + m + s;
+//         },
 
-    }).then(function () {
-        setTimeout(get_passed_time, 1000);
+//     }).then(function () {
+//         setTimeout(get_passed_time, 1000);
 
-    });
-})();
-
-$(document).ready(function () {
-    $('#stop').submit(function (event) {
-        event.preventDefault();
-        $.ajax({
-            url: "/stop",
-            type: 'POST',
-
-            sucess: function (response_data) {
-                alert(response_data);
-            }
-        });
-    });
-});
+//     });
+// })();

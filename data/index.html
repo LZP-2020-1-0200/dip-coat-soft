@@ -9,9 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="images/favicon.png" />
   <script type="text/javascript" src="js/jquery-3.6.0.min.js"></script>
-
-  <!-- <link rel="stylesheet" href="css/pico.min.css"> -->
-  <!-- <link rel="stylesheet" href="css/mycss.css"> -->
+  <script type="text/javascript" src="js/my_Js.js"></script>
   <title>Stepper by Vladislavs❤</title>
 </head>
 
@@ -27,102 +25,221 @@
   <form id="myform" name="myform" action="/submit" method="POST">
     <div class="container" id="input_container">
 
-      <input class="myinput" type="number" id="speed0" name="speed0" placeholder="Ātrums" value='%SPEED0%'
+      <!-- <input class="myinput" type="number" id="speed0" name="speed0" placeholder="Ātrums" value='%SPEED0%'
         onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input class="myinput" type="number" id="distance0" name="distance0" placeholder="Attālums" value='%DISTANCE0%'
         onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input type="radio" id="direction0" name="direction0" value="1" checked>
       <label for="direction0">Up</label>
-      <input type="radio" id="direction0" name="direction0" value="0" %DIRECTION0%>
+      <input type="radio" id="direction0" name="direction0" value="-1" %DIRECTION0%>
       <label for="direction0">Down</label><br><input class="myinput" type="number" id="speed1" name="speed1"
         placeholder="Ātrums" value='%SPEED1%' onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+
       <input class="myinput" type="number" id="distance1" name="distance1" placeholder="Attālums" value='%DISTANCE1%'
         onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input type="radio" id="direction1" name="direction1" value="1" checked>
       <label for="direction1">Up</label>
-      <input type="radio" id="direction1" name="direction1" value="0" %DIRECTION1%>
+      <input type="radio" id="direction1" name="direction1" value="-1" %DIRECTION1%>
       <label for="direction1">Down</label><br><input class="myinput" type="number" id="speed2" name="speed2"
         placeholder="Ātrums" value='%SPEED2%' onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input class="myinput" type="number" id="distance2" name="distance2" placeholder="Attālums" value='%DISTANCE2%'
         onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input type="radio" id="direction2" name="direction2" value="1" checked>
       <label for="direction2">Up</label>
-      <input type="radio" id="direction2" name="direction2" value="0" %DIRECTION2%>
+      <input type="radio" id="direction2" name="direction2" value="-1" %DIRECTION2%>
       <label for="direction2">Down</label><br><input class="myinput" type="number" id="speed3" name="speed3"
         placeholder="Ātrums" value='%SPEED3%' onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input class="myinput" type="number" id="distance3" name="distance3" placeholder="Attālums" value='%DISTANCE3%'
         onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input type="radio" id="direction3" name="direction3" value="1" checked>
       <label for="direction3">Up</label>
-      <input type="radio" id="direction3" name="direction3" value="0" %DIRECTION3%>
+      <input type="radio" id="direction3" name="direction3" value="-1" %DIRECTION3%>
       <label for="direction3">Down</label><br>
-      <input class="myinput" type="number" id="speed4" name="speed4" placeholder="Ātrums" value='%SPEED4%' onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input class="myinput" type="number" id="speed4" name="speed4" placeholder="Ātrums" value='%SPEED4%'
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input class="myinput" type="number" id="distance4" name="distance4" placeholder="Attālums" value='%DISTANCE4%'
         onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input type="radio" id="direction4" name="direction4" value="1" checked>
       <label for="direction4">Up</label>
-      <input type="radio" id="direction4" name="direction4" value="0" %DIRECTION4%>
+      <input type="radio" id="direction4" name="direction4" value="-1" %DIRECTION4%>
       <label for="direction4">Down</label><br><input class="myinput" type="number" id="speed5" name="speed5"
         placeholder="Ātrums" value='%SPEED5%' onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input class="myinput" type="number" id="distance5" name="distance5" placeholder="Attālums" value='%DISTANCE5%'
         onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input type="radio" id="direction5" name="direction5" value="1" checked>
       <label for="direction5">Up</label>
-      <input type="radio" id="direction5" name="direction5" value="0" %DIRECTION5%>
+      <input type="radio" id="direction5" name="direction5" value="-1" %DIRECTION5%>
       <label for="direction5">Down</label><br><input class="myinput" type="number" id="speed6" name="speed6"
         placeholder="Ātrums" value='%SPEED6%' onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input class="myinput" type="number" id="distance6" name="distance6" placeholder="Attālums" value='%DISTANCE6%'
         onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input type="radio" id="direction6" name="direction6" value="1" checked>
       <label for="direction6">Up</label>
-      <input type="radio" id="direction6" name="direction6" value="0" %DIRECTION6%>
+      <input type="radio" id="direction6" name="direction6" value="-1" %DIRECTION6%>
       <label for="direction6">Down</label><br><input class="myinput" type="number" id="speed7" name="speed7"
         placeholder="Ātrums" value='%SPEED7%' onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input class="myinput" type="number" id="distance7" name="distance7" placeholder="Attālums" value='%DISTANCE7%'
         onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input type="radio" id="direction7" name="direction7" value="1" checked>
       <label for="direction7">Up</label>
-      <input type="radio" id="direction7" name="direction7" value="0" %DIRECTION7%>
+      <input type="radio" id="direction7" name="direction7" value="-1" %DIRECTION7%>
       <label for="direction7">Down</label><br><input class="myinput" type="number" id="speed8" name="speed8"
         placeholder="Ātrums" value='%SPEED8%' onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input class="myinput" type="number" id="distance8" name="distance8" placeholder="Attālums" value='%DISTANCE8%'
         onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input type="radio" id="direction8" name="direction8" value="1" checked>
       <label for="direction8">Up</label>
-      <input type="radio" id="direction8" name="direction8" value="0" %DIRECTION8%>
+      <input type="radio" id="direction8" name="direction8" value="-1" %DIRECTION8%>
       <label for="direction8">Down</label><br><input class="myinput" type="number" id="speed9" name="speed9"
         placeholder="Ātrums" value='%SPEED9%' onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input class="myinput" type="number" id="distance9" name="distance9" placeholder="Attālums" value='%DISTANCE9%'
         onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input type="radio" id="direction9" name="direction9" value="1" checked>
       <label for="direction9">Up</label>
-      <input type="radio" id="direction9" name="direction9" value="0" %DIRECTION9%>
+      <input type="radio" id="direction9" name="direction9" value="-1" %DIRECTION9%>
       <label for="direction9">Down</label><br><input class="myinput" type="number" id="speed10" name="speed10"
         placeholder="Ātrums" value='%SPEED10%' onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input class="myinput" type="number" id="distance10" name="distance10" placeholder="Attālums" value='%DISTANCE10%'
         onkeyup="get_values_from_input();" onchange="get_values_from_input();">
       <input type="radio" id="direction10" name="direction10" value="1" checked>
       <label for="direction10">Up</label>
-      <input type="radio" id="direction10" name="direction10" value="0" %DIRECTION10%>
-      <label for="direction10">Down</label><br>
+      <input type="radio" id="direction10" name="direction10" value="-1" %DIRECTION10%>
+      <label for="direction10">Down</label><br> -->
+
+
+      <input class="myinput" type="number" id="speed0" name="speed0" placeholder="Ātrums" value="5000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input class="myinput" type="number" id="distance0" name="distance0" placeholder="Attālums" value="1000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input type="radio" id="direction0" name="direction0" value="1" checked>
+      <label for="direction0">Up</label>
+      <input type="radio" id="direction0" name="direction0" value="-1">
+      <label for="direction0">Down</label>
+      <br>
+
+
+      <input class="myinput" type="number" id="speed1" name="speed1" placeholder="Ātrums" value="5000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input class="myinput" type="number" id="distance1" name="distance1" placeholder="Attālums" value="1000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input type="radio" id="direction1" name="direction1" value="1" checked>
+      <label for="direction1">Up</label>
+      <input type="radio" id="direction1" name="direction1" value="-1">
+      <label for="direction1">Down</label>
+      <br>
+
+
+      <input class="myinput" type="number" id="speed2" name="speed2" placeholder="Ātrums" value="5000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input class="myinput" type="number" id="distance2" name="distance2" placeholder="Attālums" value="1000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input type="radio" id="direction2" name="direction2" value="1" checked>
+      <label for="direction2">Up</label>
+      <input type="radio" id="direction2" name="direction2" value="-1">
+      <label for="direction2">Down</label>
+      <br>
+
+
+      <input class="myinput" type="number" id="speed3" name="speed3" placeholder="Ātrums" value="5000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input class="myinput" type="number" id="distance3" name="distance3" placeholder="Attālums" value="1000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input type="radio" id="direction3" name="direction3" value="1" checked>
+      <label for="direction3">Up</label>
+      <input type="radio" id="direction3" name="direction3" value="-1">
+      <label for="direction3">Down</label>
+      <br>
+
+
+      <input class="myinput" type="number" id="speed4" name="speed4" placeholder="Ātrums" value="5000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input class="myinput" type="number" id="distance4" name="distance4" placeholder="Attālums" value="1000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input type="radio" id="direction4" name="direction4" value="1" checked>
+      <label for="direction4">Up</label>
+      <input type="radio" id="direction4" name="direction4" value="-1">
+      <label for="direction4">Down</label>
+      <br>
+
+
+      <input class="myinput" type="number" id="speed5" name="speed5" placeholder="Ātrums" value="5000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input class="myinput" type="number" id="distance5" name="distance5" placeholder="Attālums" value="1000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input type="radio" id="direction5" name="direction5" value="1" checked>
+      <label for="direction5">Up</label>
+      <input type="radio" id="direction5" name="direction5" value="-1">
+      <label for="direction5">Down</label>
+      <br>
+
+
+      <input class="myinput" type="number" id="speed6" name="speed6" placeholder="Ātrums" value="5000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input class="myinput" type="number" id="distance6" name="distance6" placeholder="Attālums" value="1000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input type="radio" id="direction6" name="direction6" value="1" checked>
+      <label for="direction6">Up</label>
+      <input type="radio" id="direction6" name="direction6" value="-1">
+      <label for="direction6">Down</label>
+      <br>
+
+
+      <input class="myinput" type="number" id="speed7" name="speed7" placeholder="Ātrums" value="5000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input class="myinput" type="number" id="distance7" name="distance7" placeholder="Attālums" value="1000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input type="radio" id="direction7" name="direction7" value="1" checked>
+      <label for="direction7">Up</label>
+      <input type="radio" id="direction7" name="direction7" value="-1">
+      <label for="direction7">Down</label>
+      <br>
+
+
+      <input class="myinput" type="number" id="speed8" name="speed8" placeholder="Ātrums" value="5000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input class="myinput" type="number" id="distance8" name="distance8" placeholder="Attālums" value="1000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input type="radio" id="direction8" name="direction8" value="1" checked>
+      <label for="direction8">Up</label>
+      <input type="radio" id="direction8" name="direction8" value="-1">
+      <label for="direction8">Down</label>
+      <br>
+
+
+      <input class="myinput" type="number" id="speed9" name="speed9" placeholder="Ātrums" value="5000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input class="myinput" type="number" id="distance9" name="distance9" placeholder="Attālums" value="1000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input type="radio" id="direction9" name="direction9" value="1" checked>
+      <label for="direction9">Up</label>
+      <input type="radio" id="direction9" name="direction9" value="-1">
+      <label for="direction9">Down</label>
+      <br>
+
+
+      <input class="myinput" type="number" id="speed10" name="speed10" placeholder="Ātrums" value="5000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input class="myinput" type="number" id="distance10" name="distance10" placeholder="Attālums" value="1000"
+        onkeyup="get_values_from_input();" onchange="get_values_from_input();">
+      <input type="radio" id="direction10" name="direction10" value="1" checked>
+      <label for="direction10">Up</label>
+      <input type="radio" id="direction10" name="direction10" value="-1">
+      <label for="direction10">Down</label>
+      <br>
 
       <button type="submit">
         Submit and Start!
       </button>
-      
+
     </div>
   </form>
 
-  <form action="go_to_top" method="post" id="go_to_top">
-    <button name="foo" value="go_to_top">Go to the top</button>
-  </form>
 
-  <form action="/stop" method="post" id="stop">
-    <button name="bar" value="stop">Stop</button>
-  </form>
+  <button name="foo" value="go_to_top" onclick="sendRequestButton(this.value)">Go to the top</button>
+  <button name="pause" value="pause" onclick="sendRequestButton(this.value)">Pause</button>
+  <button name="stop" value="stop" onclick="sendRequestButton(this.value)">Stop</button>
 
-  <!-- <button onclick="addrows();">Press me</button> -->
-  <script type="text/javascript" src="js/my_Js.js"></script>
+
 </body>
 
 </html>

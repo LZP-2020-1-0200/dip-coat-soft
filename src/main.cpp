@@ -1,18 +1,6 @@
 #include "internet.h"
 #include "web_server.h"
-
-#define LEDPIN 2
-#define STEPPER_LINE1 15
-#define STEPPER_LINE2 13
-#define STEPPER_LINE3 12
-#define STEPPER_LINE4 14
-#define REACHED_TOP_LINE 5
-#define REACHED_BOTTOM_LINE 4
-
-static const uint8_t Q1[] = {LOW, HIGH, HIGH, LOW};
-static const uint8_t Q2[] = {HIGH, LOW, LOW, HIGH};
-static const uint8_t Q3[] = {LOW, LOW, HIGH, HIGH};
-static const uint8_t Q4[] = {HIGH, HIGH, LOW, LOW};
+#include "stepper.h"
 
 unsigned long previousMillis = 0;
 unsigned long currentMillis;
@@ -57,57 +45,61 @@ void setup()
 
 void loop()
 {
-  if (submitted)
+
+  if (!submitted && !go_to_top)
   {
-    passed_time2 = "0";
-    uint8_t i = 0;
-    while (inputs[i].speed && !finished && submitted)
-    {
-      currentMillis = millis();
-      if (currentMillis - previousMillis >= inputs[i].interval)
-      {
-        if (previousMillis)
-          passed_time += (currentMillis - previousMillis);
-
-        previousMillis = currentMillis;
-        // ledstate = ledstate == HIGH ? LOW : HIGH;
-        // digitalWrite(LEDPIN, ledstate);
-
-        position += inputs[i].direction ? 1 : -1;
-        const int phase = position & 0x3;
-        digitalWrite(STEPPER_LINE1, Q1[phase]);
-        digitalWrite(STEPPER_LINE2, Q2[phase]);
-        digitalWrite(STEPPER_LINE3, Q3[phase]);
-        digitalWrite(STEPPER_LINE4, Q4[phase]);
-
-        // Serial.println((inputs[i].milli_seconds - passed_time) / 1000);
-        passed_time2 = String((passed_time+total_passed_time)/1000);
-
-        if (passed_time >= inputs[i].milli_seconds)
-        {
-          i++;
-          total_passed_time += passed_time;
-          passed_time = 0;
-          previousMillis = 0;
-        }
-      }
-    }
-    finished = true;
+    return;
   }
+
   if (go_to_top)
   {
-    Serial.println("i recieved command");
-    while (!digitalRead(REACHED_TOP_LINE))
-    {
-      delayMicroseconds(200000);
-      position += 1;
-      const int phase = position & 0x3;
-      Serial.println(phase);
-      digitalWrite(STEPPER_LINE1, Q1[phase]);
-      digitalWrite(STEPPER_LINE2, Q2[phase]);
-      digitalWrite(STEPPER_LINE3, Q3[phase]);
-      digitalWrite(STEPPER_LINE4, Q4[phase]);
-    }
-    go_to_top = false;
+    go_to_top_();
+    go_to_top = !go_to_top;
   }
+
+  // itereate for every input recieved
+  for (input x : inputs)
+  {
+    // if speed is zero, then all valid inputs are executed and loop ends
+    if (x.speed == 0 || stopped)
+    {
+      break;
+      stopped = false;
+    }
+
+    passed_time = 0;
+    previousMillis = 0;
+
+    while (passed_time <= x.milli_seconds)
+    {
+
+      if (paused)
+      {
+        delay(25);
+        previousMillis = 0;
+        continue;
+      }
+
+      if (stopped)
+        break;
+
+      currentMillis = millis();
+      if (currentMillis - previousMillis >= x.interval)
+      {
+        // It breaks without this line... why?
+        Serial.println((x.milli_seconds - passed_time));
+
+        // Skip first previous millis
+        passed_time += previousMillis ? (currentMillis - previousMillis) : 0;
+
+        previousMillis = currentMillis;
+        ledstate = ledstate == HIGH ? LOW : HIGH;
+        digitalWrite(LEDPIN, ledstate);
+
+        position += x.direction;
+        make_step(position & 0x3);
+      }
+    }
+  }
+  submitted = false;
 }

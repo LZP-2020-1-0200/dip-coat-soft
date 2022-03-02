@@ -1,25 +1,20 @@
 #include "web_server.h"
+#include "stepper.h"
 #include "AsyncJson.h"
 #include "ArduinoJson.h"
 
 AsyncWebServer server(80);
 input inputs[15];
 bool submitted;
-bool finished;
 bool go_to_top;
-String passed_time2 = "0";
-
-uint16_t calculate_pause_interval(uint32_t speed)
-{
-    return round(DISTANCE_NM_PER_ROTATION / speed);
-}
+bool paused = false;
+bool stopped = false;
 
 void print_input()
 {
     for (auto x : inputs)
     {
-        if (!x.speed)
-            break;
+
         Serial.print("Speed: ");
         Serial.print(x.speed);
         Serial.print(" Distance: ");
@@ -27,7 +22,7 @@ void print_input()
         Serial.print(" Interval: ");
         Serial.print(x.interval);
         Serial.print(" Position: ");
-        Serial.println(x.direction ? "Up" : "Down");
+        Serial.println(x.direction == 1 ? "Up" : "Down");
     }
     Serial.println("");
 }
@@ -65,25 +60,45 @@ void initialize_server()
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
               { request->send(LittleFS, "/index.html", String(), false, processor); });
 
+    server.on("/go_to_top", HTTP_POST, [](AsyncWebServerRequest *request)
+              {
+                  go_to_top = true;
+                  request->send(200, "text/plain", "Going top"); });
+
+
+    server.on("/pause", HTTP_POST, [](AsyncWebServerRequest *request)
+              {
+                  paused = !paused;
+                  request->send(200, "text/plain", "Paused"); }
+
+    );
+
+    server.on("/stop", HTTP_POST, [](AsyncWebServerRequest *request)
+              {
+                  stopped = true;
+                  request->send(200, "text/plain", "Stopped"); }
+
+    );
+
     server.on("/submit", HTTP_POST, [](AsyncWebServerRequest *request)
               {
                   submitted = false;
-                  finished = false;
-                  StaticJsonDocument<256> doc;
+                  StaticJsonDocument<1536> doc;
                   AsyncWebParameter *p = request->getParam(0);
                   deserializeJson(doc, p->value());
                   JsonObject root = doc.as<JsonObject>();
-                  int i = 0;
 
-                  // reset all inputs
-                  for (auto x : inputs)
+                  for (unsigned int i = 0; i < sizeof(inputs) / sizeof(inputs[0]); i++)
                   {
-                      x.speed = 0;
-                      x.direction = 0;
-                      x.distance = 0;
-                      x.interval = 0;
+                      Serial.println(i);
+                      inputs[i].speed = 0;
+                      inputs[i].direction = 0;
+                      inputs[i].distance = 0;
+                      inputs[i].interval = 0;
+                      inputs[i].milli_seconds = 0;
                   }
 
+                  int i = 0;
                   for (JsonPair kv : root)
                   {
                       // if parameter speed
@@ -96,34 +111,16 @@ void initialize_server()
 
                       else
                       {
-                          inputs[i].direction = kv.value().as<uint8_t>();
+                          inputs[i].direction = kv.value().as<int>();
                           inputs[i].interval = calculate_pause_interval(inputs[i].speed);
                           inputs[i].milli_seconds = (inputs[i].distance / inputs[i].speed) * 1000;
                           i++;
                       }
                   }
+
                   print_input();
                   submitted = true;
-                  request->send(200, "text/plain", "success");
-              });
+                  request->send(200, "text/plain", "success"); });
 
-    server.on("/go_to_top", HTTP_POST, [](AsyncWebServerRequest *request)
-              {
-                  go_to_top = true;
-                  request->send(200, "text/plain", "going top"); });
-
-    server.on("/get_passed_time", HTTP_POST, [](AsyncWebServerRequest *request)
-              {
-                  
-                  request->send(200, "text/plain", passed_time2); }
-
-    );
-
-    server.on("/stop", HTTP_POST, [](AsyncWebServerRequest *request)
-              {
-                  submitted = false;
-                  request->send(200, "text/plain", "stopping"); }
-
-    );
     server.begin();
 }
