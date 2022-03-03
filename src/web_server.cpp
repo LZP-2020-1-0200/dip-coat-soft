@@ -83,7 +83,7 @@ void initialize_server()
     server.on("/submit", HTTP_POST, [](AsyncWebServerRequest *request)
               {
                   submitted = false;
-                  StaticJsonDocument<1536> doc;
+                  StaticJsonDocument<2048> doc;
                   AsyncWebParameter *p = request->getParam(0);
                   deserializeJson(doc, p->value());
                   JsonObject root = doc.as<JsonObject>();
