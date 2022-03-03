@@ -70,7 +70,7 @@ function convertFormToJSON(form) {
 
 function sendRequestButton(formID) {
     $(document).ready(function () {
-        $.post(formID,function(response) {
+        $.post(formID, function (response) {
             alert(response);
         });
     });
@@ -142,3 +142,56 @@ function get_values_from_input() {
 
 //     });
 // })();
+
+function hide_row() {
+    const all_rows = document.getElementsByClassName("mydiv");
+    already_hidden = false;
+
+    Array.from(all_rows).reverse().forEach(function (row) {
+
+        if (row.offsetParent !== null && !already_hidden) {
+            already_hidden = true;
+            row.style.display = "none";
+            const all_inputs = row.getElementsByTagName("input");
+            Array.from(all_inputs).forEach(function (input) {
+                input.disabled = true;
+            });
+        }
+    });
+}
+
+function add_row() {
+    const all_rows = document.getElementsByClassName("mydiv");
+    already_added = false;
+    Array.from(all_rows).reverse().forEach(function (row) {
+
+        if (row.offsetParent === null && !already_added) {
+            already_added = true;
+            row.style.display = "block";
+            const all_inputs = row.getElementsByTagName("input");
+            Array.from(all_inputs).forEach(function (input) {
+                input.disabled = false;
+            });
+        }
+    });
+}
+
+    // alert(all_rows[0])
+    // for (let row in all_rows) {
+    //     if (row.offsetParent !== null) {
+
+    //         row.style.display = "none";
+    //         break;
+    //     }
+    // }
+
+    // for (let i = all_rows.length; i > all_rows.length; i--) {
+    //     alert(i)
+    //     console.log(all_rows[i]);
+    //     if (all_rows[i].offsetParent !== null){
+    //         all.rows[i].style.display = "none";
+    //         break;
+    //     }
+    // }
+
+
