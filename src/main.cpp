@@ -55,16 +55,16 @@ void loop()
   {
     go_to_top_();
     go_to_top = !go_to_top;
+    return;
   }
 
   // itereate for every input recieved
   for (input x : inputs)
   {
     // if speed is zero, then all valid inputs are executed and loop ends
-    if (x.speed == 0 || stopped)
+    if (x.speed == 0)
     {
       break;
-      stopped = false;
     }
 
     passed_time = 0;
@@ -81,7 +81,11 @@ void loop()
       }
 
       if (stopped)
-        break;
+      {
+        stopped = !stopped;
+        submitted = false;
+        return;
+      }
 
       currentMillis = millis();
       if (currentMillis - previousMillis >= x.interval)

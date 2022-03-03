@@ -6,9 +6,10 @@
 #include <ESPAsyncTCP.h>
 
 typedef struct {
+    uint8_t id;
     uint32_t speed;
-    int direction;
     uint32_t distance;
+    int direction;
     unsigned long interval;
     uint32_t milli_seconds;
 } input;
@@ -19,7 +20,9 @@ void initialize_server();
 
 void print_input();
 
-extern input inputs[15];
+void clear_inputs();
+
+extern input inputs[20];
 extern bool submitted;
 extern bool paused;
 extern bool stopped;

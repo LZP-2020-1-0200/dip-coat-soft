@@ -4,7 +4,7 @@
 #include "ArduinoJson.h"
 
 AsyncWebServer server(80);
-input inputs[15];
+input inputs[20];
 bool submitted;
 bool go_to_top;
 bool paused = false;
@@ -12,19 +12,24 @@ bool stopped = false;
 
 void print_input()
 {
-    for (auto x : inputs)
+    for (input x : inputs)
     {
-
-        Serial.print("Speed: ");
-        Serial.print(x.speed);
-        Serial.print(" Distance: ");
-        Serial.print(x.distance);
-        Serial.print(" Interval: ");
-        Serial.print(x.interval);
-        Serial.print(" Position: ");
-        Serial.println(x.direction == 1 ? "Up" : "Down");
+        Serial.printf("ID: %d\tSpeed: %d\tDistance: %d\tInterval: %lu\tDirection: %s\tTotal Time: %u\n",
+                      x.id, x.speed, x.distance, x.interval, x.direction == 1 ? "Up" : "Down", x.milli_seconds);
     }
-    Serial.println("");
+}
+
+void clear_inputs()
+{
+    for (unsigned int i = 0; i < sizeof(inputs) / sizeof(inputs[0]); i++)
+    {
+        Serial.println(i);
+        inputs[i].speed = 0;
+        inputs[i].direction = 0;
+        inputs[i].distance = 0;
+        inputs[i].interval = 0;
+        inputs[i].milli_seconds = 0;
+    }
 }
 
 String processor(const String &var)
@@ -65,20 +70,15 @@ void initialize_server()
                   go_to_top = true;
                   request->send(200, "text/plain", "Going top"); });
 
-
     server.on("/pause", HTTP_POST, [](AsyncWebServerRequest *request)
               {
                   paused = !paused;
-                  request->send(200, "text/plain", "Paused"); }
-
-    );
+                  request->send(200, "text/plain", "Paused"); });
 
     server.on("/stop", HTTP_POST, [](AsyncWebServerRequest *request)
               {
                   stopped = true;
-                  request->send(200, "text/plain", "Stopped"); }
-
-    );
+                  request->send(200, "text/plain", "Stopped"); });
 
     server.on("/submit", HTTP_POST, [](AsyncWebServerRequest *request)
               {
@@ -87,16 +87,7 @@ void initialize_server()
                   AsyncWebParameter *p = request->getParam(0);
                   deserializeJson(doc, p->value());
                   JsonObject root = doc.as<JsonObject>();
-
-                  for (unsigned int i = 0; i < sizeof(inputs) / sizeof(inputs[0]); i++)
-                  {
-                      Serial.println(i);
-                      inputs[i].speed = 0;
-                      inputs[i].direction = 0;
-                      inputs[i].distance = 0;
-                      inputs[i].interval = 0;
-                      inputs[i].milli_seconds = 0;
-                  }
+                  clear_inputs();
 
                   int i = 0;
                   for (JsonPair kv : root)
@@ -113,7 +104,8 @@ void initialize_server()
                       {
                           inputs[i].direction = kv.value().as<int>();
                           inputs[i].interval = calculate_pause_interval(inputs[i].speed);
-                          inputs[i].milli_seconds = (inputs[i].distance / inputs[i].speed) * 1000;
+                          inputs[i].milli_seconds = calculate_time_needed(inputs[i].distance, inputs[i].speed);
+                          inputs[i].id = i;
                           i++;
                       }
                   }

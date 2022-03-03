@@ -20,5 +20,5 @@ static const uint8_t Q4[] = {HIGH, HIGH, LOW, LOW};
 void go_to_top_();
 void make_step(int);
 uint16_t calculate_pause_interval(uint32_t);
-
+uint32_t calculate_time_needed(uint32_t, uint32_t);
 #endif // DEBUG

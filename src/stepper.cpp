@@ -2,7 +2,12 @@
 
 uint16_t calculate_pause_interval(uint32_t speed)
 {
-    return round(DISTANCE_NM_PER_ROTATION / speed);
+  return round(DISTANCE_NM_PER_ROTATION / speed);
+}
+
+uint32_t calculate_time_needed(uint32_t distance, uint32_t speed)
+{
+  return round(((double)distance / double(speed)) * 1000);
 }
 
 void make_step(int phase)
