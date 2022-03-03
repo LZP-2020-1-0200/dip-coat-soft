@@ -101,7 +101,7 @@ function get_values_from_input() {
     let inputs = document.getElementsByClassName('myinput');
     let seconds = 0;
     for (var i = 0; i < inputs.length; i += 2) {
-        if (inputs[i].value && inputs[i + 1].value) {
+        if (inputs[i].value && inputs[i + 1].value && !inputs[i].disabled) {
             let distance = parseInt(inputs[i + 1].value) * 1000;
             let speed = parseInt(inputs[i].value);
             seconds += distance / speed;
@@ -156,12 +156,13 @@ function hide_row() {
             });
         }
     });
+    get_values_from_input();
 }
 
 function add_row() {
     const all_rows = document.getElementsByClassName("mydiv");
     already_added = false;
-    Array.from(all_rows).reverse().forEach(function (row) {
+    Array.from(all_rows).forEach(function (row) {
 
         if (row.offsetParent === null && !already_added) {
             already_added = true;
@@ -172,4 +173,9 @@ function add_row() {
             });
         }
     });
+    get_values_from_input();
 }
+
+$(document).ready(function () {
+    get_values_from_input();
+});
