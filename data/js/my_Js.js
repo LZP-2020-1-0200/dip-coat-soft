@@ -97,8 +97,6 @@ $(document).ready(function () {
     });
 });
 
-
-
 function get_values_from_input() {
     let inputs = document.getElementsByClassName('myinput');
     let seconds = 0;
@@ -175,23 +173,3 @@ function add_row() {
         }
     });
 }
-
-    // alert(all_rows[0])
-    // for (let row in all_rows) {
-    //     if (row.offsetParent !== null) {
-
-    //         row.style.display = "none";
-    //         break;
-    //     }
-    // }
-
-    // for (let i = all_rows.length; i > all_rows.length; i--) {
-    //     alert(i)
-    //     console.log(all_rows[i]);
-    //     if (all_rows[i].offsetParent !== null){
-    //         all.rows[i].style.display = "none";
-    //         break;
-    //     }
-    // }
-
-
