@@ -78,7 +78,6 @@ function updateProgressBar() {
     const percentage_per_millisecond = (1 / (time_needed * 1e3)) * 100;
 
     if (progress_percentage >= 100) {
-        console.log("why?", progress_percentage);
         is_working = false;
         updateButtonStates();
         return;
@@ -142,6 +141,7 @@ function preserveInputs() {
         array.push(inputs[i].disabled ? 1 : -1);
 
     }
+    console.log(array);
     sessionStorage.inputArray = JSON.stringify(array);
 }
 
@@ -155,39 +155,51 @@ function restoreInputsAfterRefresh() {
         inputs[i + 1].value = array[i + 1];
         array[i + 2] === 1 ? inputs[i + 2].checked = true : inputs[i + 3].checked = true;
     }
-
     let counter = 3;
-
     Array.from(all_rows).forEach(row => {
 
         if (array[counter] === 1) {
             row.style.display = "none";
             Array.from(row.getElementsByTagName("input")).forEach(input => input.disabled = true);
-
-
         }
 
         else {
             Array.from(row.getElementsByTagName("input")).forEach(input => input.disabled = false);
             row.style.display = "";
-
         }
         counter += 4;
     });
+    getFormattedTimeStringFromInputs();
 
 
 
 }
 
+function fillInputs() {
+    const all_rows = document.getElementsByClassName("row gx-3 gy-1 justify-content-center");
+    Array.from(all_rows).forEach(row => {
+        const all_inputs = row.getElementsByTagName("input");
+        all_inputs[0].value = randomNumber(5000,20000);
+        all_inputs[1].value = randomNumber(100,500);
+
+        randomNumber(0,1) === 0 ? all_inputs[2].checked = true : all_inputs[3].checked = true;
+       
+    });
+    getFormattedTimeStringFromInputs();
+}
+
 documentReady(() => {
 
-    // test();
+
     sessionStorage.inputArray && restoreInputsAfterRefresh();
+    getFormattedTimeStringFromInputs();
+   
 
     fetch("recieve_inputs", { method: 'POST' }).then(response => response.json()).then(response => {
 
         if (Object.keys(response).length === 0 && response.constructor === Object) {
             console.log("Not working");
+            is_working = false;
             return;
         }
 
@@ -254,4 +266,12 @@ function submitForm() {
             alert(response);
         }));
 
+}
+
+
+
+async function recieveFromESP8266(){
+    let response = await fetch("get_programms",{method: "POST",});
+    let answer = await response.text();
+    console.log(answer);
 }

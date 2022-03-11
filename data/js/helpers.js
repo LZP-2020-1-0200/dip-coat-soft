@@ -63,9 +63,15 @@ function documentReady(fn) {
     }
 }
 
+function randomNumber(min, max) { 
+    return Math.round(Math.random() * (max - min) + min);
+} 
+
 function allInputWrapper(fun){
     const all_rows = document.getElementsByClassName("row gx-3 gy-1 justify-content-center");
     Array.from(all_rows).forEach(row => {
-        fun(row);
+        Array.from(row.getElementsByTagName("input")).forEach(input => {
+            fun(input);
+        })
     });
 }

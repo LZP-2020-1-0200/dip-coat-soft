@@ -2,7 +2,7 @@
 
 uint16_t calculate_pause_interval(uint32_t speed)
 {
-  return round(DISTANCE_NM_PER_ROTATION / speed);
+  return round((double)DISTANCE_NM_PER_ROTATION / double(speed));
 }
 
 uint32_t calculate_time_needed(uint32_t distance, uint32_t speed)

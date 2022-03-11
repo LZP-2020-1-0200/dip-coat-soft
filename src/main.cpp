@@ -1,9 +1,10 @@
 #include "internet.h"
 #include "web_server.h"
 #include "stepper.h"
+#include "programms.h"
 
 unsigned long previousMillis = 0;
-unsigned long currentMillis;
+
 uint32_t passed_time = 0;
 uint32_t total_passed_time = 0;
 uint16_t position = 0;
@@ -12,6 +13,7 @@ uint8_t ledstate = LOW;
 void setup()
 {
   Serial.begin(74880);
+  
 
   pinMode(LEDPIN, HIGH);
   pinMode(STEPPER_LINE1, OUTPUT);
@@ -34,6 +36,8 @@ void setup()
     return;
   }
 
+
+
   if (!initialize_wifi())
   {
     Serial.println("\nCould not connect to WiFi");
@@ -41,6 +45,8 @@ void setup()
   }
 
   initialize_server();
+
+    printData();
 }
 
 void loop()
@@ -62,7 +68,7 @@ void loop()
   for (input x : inputs)
   {
     // if speed is zero, then all valid inputs are executed and loop ends
-    if (!x.speed)
+    if (x.hidden == 1)
     {
       break;
     }
@@ -75,7 +81,7 @@ void loop()
 
       if (paused)
       {
-        delay(25);
+        delay(1);
         previousMillis = 0;
         continue;
       }
@@ -88,23 +94,26 @@ void loop()
         return;
       }
 
-      currentMillis = millis();
-      if (currentMillis - previousMillis >= x.interval)
+      unsigned long currentMillis = millis();
+      if (currentMillis - previousMillis < x.interval)
       {
-        // It breaks without this line... why?
-        Serial.println((x.milli_seconds - passed_time));
-
-        // Skip first previous millis
-        passed_time += previousMillis ? (currentMillis - previousMillis) : 0;
-        total_passed_time += previousMillis ? (currentMillis - previousMillis) : 0;
-
-        previousMillis = currentMillis;
-        ledstate = ledstate == HIGH ? LOW : HIGH;
-        digitalWrite(LEDPIN, ledstate);
-
-        position += x.direction;
-        make_step(position & 0x3);
+        delay(1);
+        continue;
       }
+
+      // It breaks without this line... why?
+      // Serial.println((x.milli_seconds - passed_time));
+
+      // Skip first previous millis
+      passed_time += previousMillis ? (currentMillis - previousMillis) : 0;
+      total_passed_time += previousMillis ? (currentMillis - previousMillis) : 0;
+
+      previousMillis = currentMillis;
+      ledstate = ledstate == HIGH ? LOW : HIGH;
+      
+
+      position += x.direction;
+      make_step(position & 0x3);
     }
   }
   submitted = false;

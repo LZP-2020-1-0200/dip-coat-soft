@@ -24,6 +24,7 @@ void clear_inputs()
 {
     for (unsigned int i = 0; i < sizeof(inputs) / sizeof(inputs[0]); i++)
     {
+        inputs[i].hidden = 1;
         inputs[i].speed = 0;
         inputs[i].direction = 0;
         inputs[i].distance = 0;
@@ -53,6 +54,7 @@ void initialize_server()
 
     server.on("/stop", HTTP_POST, [](AsyncWebServerRequest *request)
               {
+                  clear_inputs();
                   stopped = true;
                   request->send(200, "text/plain", "Stopped"); });
 
@@ -63,6 +65,7 @@ void initialize_server()
               {
                   if (inputs[0].speed)
                   {
+                      Serial.println("Sent normal JSON");
                       AsyncResponseStream *response = request->beginResponseStream("application/json");
                       serializeJson(doc, *response);
                       request->send(response);
@@ -70,9 +73,9 @@ void initialize_server()
 
                   else
                   {
+                      Serial.println("Sent empty JSON");
                       request->send(200, "application/json", "{}");
-                  }
-              });
+                  } });
 
     server.on("/submit", HTTP_POST, [](AsyncWebServerRequest *request)
               {
@@ -105,7 +108,14 @@ void initialize_server()
 
                   print_input();
                   submitted = true;
-                  request->send(200, "text/plain", "success"); });
+                  request->send(200, "text/plain", "success");
+                  
+                   });
+
+    server.on("/get_programms", HTTP_POST, [](AsyncWebServerRequest *request)
+              { request->send(LittleFS, "/programms/test.txt", "text/plain"); 
+              
+              });
 
     server.begin();
 }
