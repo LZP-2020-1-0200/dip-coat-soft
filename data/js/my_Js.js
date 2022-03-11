@@ -78,6 +78,7 @@ function updateProgressBar() {
     const percentage_per_millisecond = (1 / (time_needed * 1e3)) * 100;
 
     if (progress_percentage >= 100) {
+        console.log("why?", progress_percentage);
         is_working = false;
         updateButtonStates();
         return;
@@ -124,7 +125,7 @@ function updateButtonStates() {
     document.getElementById('remaining_time').style.display = is_working ? "inline" : "none";
     document.getElementById('hetyo').style.display = is_working ? "block" : "none";
 
-    Array.from(document.getElementsByTagName("input")).forEach(row => row.disabled = is_working);
+    Array.from(document.getElementsByClassName('kekw')).forEach(row => row.disabled = is_working);
 }
 
 function preserveInputs() {
@@ -153,9 +154,6 @@ function restoreInputsAfterRefresh() {
         inputs[i].value = array[i];
         inputs[i + 1].value = array[i + 1];
         array[i + 2] === 1 ? inputs[i + 2].checked = true : inputs[i + 3].checked = true;
-
-        // inputs[i + 2].checked = array[i + 2] === 1;
-
     }
 
     let counter = 3;
@@ -183,17 +181,57 @@ function restoreInputsAfterRefresh() {
 
 documentReady(() => {
 
+    // test();
     sessionStorage.inputArray && restoreInputsAfterRefresh();
 
-    fetch("get_passed_time", { method: "POST", }).then(response => response.text()).then(response => {
-        let passed_time = parseInt(response);
-        progress_percentage = (passed_time / Number(time_needed) * 100) || 0;
-        startTime = performance.now();
-        console.log("On document load passed time: ", passed_time);
+    fetch("recieve_inputs", { method: 'POST' }).then(response => response.json()).then(response => {
+
+        if (Object.keys(response).length === 0 && response.constructor === Object) {
+            console.log("Not working");
+            return;
+        }
+
+        console.log(response);
+
+        let i = 0;
+        const all_rows = document.getElementsByClassName("row gx-3 gy-1 justify-content-center");
+        let time1 = 0;
+
+        for (const row of Object.keys(response)) {
+            const row_inputs = all_rows[i].getElementsByClassName("kekw");
+            row_inputs[0].value = response[row]["speed"];
+            row_inputs[1].value = response[row]["distance"];
+            response[row]["direction"] == 1 ? row_inputs[2].checked = true : row_inputs[3].checked = true;
+
+            response[row]["hidden"] === 1 ? all_rows[i].style.display = "none" : all_rows[i].style.display = "";
+
+            if (response[row]["hidden"] !== 1)
+                time1 += (response[row]["distance"] * 1000) / response[row]["speed"];
+
+            row_inputs[0].disabled = response[row]["hidden"] === 1;
+            row_inputs[1].disabled = response[row]["hidden"] === 1;
+            row_inputs[2].disabled = response[row]["hidden"] === 1;
+            row_inputs[3].disabled = response[row]["hidden"] === 1;
+            i++;
+        }
+        is_working = true;
+        updateButtonStates();
+        time_needed = time1;
+        changeInnerHTMLbyID("ajaxtest", "Calculated time: " + secondsToTimeString(time1));
+        console.log(time_needed);
+
+    }).then(() => {
+        fetch("get_passed_time", { method: "POST", }).then(response => response.text()).then(response => {
+            let passed_time = parseInt(response) / 1e3;
+            progress_percentage = (passed_time / time_needed * 100) || 0;
+            console.log("time needed : ", time_needed);
+            console.log("Percentage from response ", progress_percentage);
+            startTime = performance.now();
+            updateProgressBar = setInterval(updateProgressBar, frames_per_second);
+        });
     });
 
-    getFormattedTimeStringFromInputs();
-    updateProgressBar = setInterval(updateProgressBar, frames_per_second);
+
 });
 
 function submitForm() {
@@ -216,27 +254,4 @@ function submitForm() {
             alert(response);
         }));
 
-}
-
-
-function test() {
-    changeInnerHTMLbyID('remaining_time', getRemainingTime(97.5, 5600));
-    fetch("recieve_inputs", { method: 'POST' }).then(response => response.json()).then(response => {
-
-
-        if (Object.keys(response).length === 0 && response.constructor === Object) {
-            return;
-        }
-
-        let inputs = document.getElementsByClassName('kekw');
-        let i = 0;
-        hidden_counter = 10;
-        added_counter = 10;
-        for (const row of Object.keys(response)) {
-            inputs[i].value = response[row]["speed"];
-            inputs[i + 1].value = response[row]["distance"];
-            inputs[i + 2].checked = response[row]["direction"] == 1 ? true : false;
-            response[row]["hidden"] == 1 ? hideRow() : addRow();
-        }
-    });
 }

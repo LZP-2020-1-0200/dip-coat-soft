@@ -11,8 +11,7 @@
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
       integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
     <link href="css/mycss.css" rel="stylesheet">
-    <script src="js/helpers.js" type="text/javascript"></script>
-    <script src="js/my_Js.js" type="text/javascript"></script>
+
     <title>Stepper by Vladislavs❤</title>
 </head>
 
@@ -29,7 +28,8 @@
                   style='width: 0' id="progress_bar">
                 </div>
             </div>
-            <h6 class="text-center mt-3" style="display:none" id="hetyo">Remaining time: <span style="display:inline;" id="remaining_time">00:00:00</span>
+            <h6 class="text-center mt-3" style="display:none" id="hetyo">Remaining time: <span style="display:inline;"
+                  id="remaining_time">00:00:00</span>
             </h6>
             <h3 class="mt-3" id="ajaxtest"></h3>
         </header>
@@ -48,8 +48,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed0"
-                                   name="speed0" onchange="getFormattedTimeStringFromInputs();"
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              name="speed0" onchange="getFormattedTimeStringFromInputs();"
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -59,18 +60,19 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" id="distance0" name="distance0"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000">
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000">
                     </div>
                 </div>
                 <div class="col-sm my-auto">
                     <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction0" name="direction0" type="radio" onclick="preserveInputs();"
-                          value="1">
+                        <input checked class="kekw form-check-input" id="direction0" name="direction0" type="radio"
+                          onclick="preserveInputs();" value="1">
                         <label class="form-check-label" for="direction0">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction0" name="direction0" type="radio" onclick="preserveInputs();" value="-1">
+                        <input class="kekw form-check-input" id="direction0" name="direction0" type="radio"
+                          onclick="preserveInputs();" value="-1">
                         <label class="form-check-label" for="direction0">Down</label>
                     </div>
                 </div>
@@ -84,8 +86,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed1"
-                                   name="speed1" onchange="getFormattedTimeStringFromInputs();"
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              name="speed1" onchange="getFormattedTimeStringFromInputs();"
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -95,18 +98,19 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" id="distance1" name="distance1"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000">
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000">
                     </div>
                 </div>
                 <div class="col my-auto">
                     <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction1" name="direction1" type="radio" onclick="preserveInputs();"
-                          value="1">
+                        <input checked class="kekw form-check-input" id="direction1" name="direction1" type="radio"
+                          onclick="preserveInputs();" value="1">
                         <label class="form-check-label" for="direction1">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction1" name="direction1" type="radio" onclick="preserveInputs();" value="-1">
+                        <input class="kekw form-check-input" id="direction1" name="direction1" type="radio"
+                          onclick="preserveInputs();" value="-1">
                         <label class="form-check-label" for="direction1">Down</label>
                     </div>
                 </div>
@@ -119,8 +123,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed2"
-                                   name="speed2" onchange="getFormattedTimeStringFromInputs();"
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              name="speed2" onchange="getFormattedTimeStringFromInputs();"
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -130,18 +135,19 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" id="distance2" name="distance2"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000">
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000">
                     </div>
                 </div>
                 <div class="col my-auto">
                     <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction2" name="direction2" type="radio" onclick="preserveInputs();"
-                          value="1">
+                        <input checked class="kekw form-check-input" id="direction2" name="direction2" type="radio"
+                          onclick="preserveInputs();" value="1">
                         <label class="form-check-label" for="direction2">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction2" name="direction2" type="radio" onclick="preserveInputs();" value="-1">
+                        <input class="kekw form-check-input" id="direction2" name="direction2" type="radio"
+                          onclick="preserveInputs();" value="-1">
                         <label class="form-check-label" for="direction2">Down</label>
                     </div>
                 </div>
@@ -154,8 +160,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed3"
-                                   name="speed3" onchange="getFormattedTimeStringFromInputs();"
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              name="speed3" onchange="getFormattedTimeStringFromInputs();"
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -165,18 +172,19 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" id="distance3" name="distance3"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000">
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000">
                     </div>
                 </div>
                 <div class="col my-auto">
                     <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction3" name="direction3" type="radio" onclick="preserveInputs();"
-                          value="1">
+                        <input checked class="kekw form-check-input" id="direction3" name="direction3" type="radio"
+                          onclick="preserveInputs();" value="1">
                         <label class="form-check-label" for="direction3">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction3" name="direction3" type="radio" onclick="preserveInputs();" value="-1">
+                        <input class="kekw form-check-input" id="direction3" name="direction3" type="radio"
+                          onclick="preserveInputs();" value="-1">
                         <label class="form-check-label" for="direction3">Down</label>
                     </div>
                 </div>
@@ -189,8 +197,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed4"
-                                   name="speed4" onchange="getFormattedTimeStringFromInputs();"
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              name="speed4" onchange="getFormattedTimeStringFromInputs();"
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -200,18 +209,19 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" id="distance4" name="distance4"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000">
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000">
                     </div>
                 </div>
                 <div class="col my-auto">
                     <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction4" name="direction4" type="radio" onclick="preserveInputs();"
-                          value="1">
+                        <input checked class="kekw form-check-input" id="direction4" name="direction4" type="radio"
+                          onclick="preserveInputs();" value="1">
                         <label class="form-check-label" for="direction4">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction4" name="direction4" type="radio" onclick="preserveInputs();" value="-1">
+                        <input class="kekw form-check-input" id="direction4" name="direction4" type="radio"
+                          onclick="preserveInputs();" value="-1">
                         <label class="form-check-label" for="direction4">Down</label>
                     </div>
                 </div>
@@ -224,8 +234,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed5"
-                                   name="speed5" onchange="getFormattedTimeStringFromInputs();"
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              name="speed5" onchange="getFormattedTimeStringFromInputs();"
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -235,18 +246,19 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" id="distance5" name="distance5"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000">
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000">
                     </div>
                 </div>
                 <div class="col my-auto">
                     <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction5" name="direction5" type="radio" onclick="preserveInputs();"
-                          value="1">
+                        <input checked class="kekw form-check-input" id="direction5" name="direction5" type="radio"
+                          onclick="preserveInputs();" value="1">
                         <label class="form-check-label" for="direction5">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction5" name="direction5" type="radio" onclick="preserveInputs();" value="-1">
+                        <input class="kekw form-check-input" id="direction5" name="direction5" type="radio"
+                          onclick="preserveInputs();" value="-1">
                         <label class="form-check-label" for="direction5">Down</label>
                     </div>
                 </div>
@@ -259,8 +271,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed6"
-                                   name="speed6" onchange="getFormattedTimeStringFromInputs();"
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              name="speed6" onchange="getFormattedTimeStringFromInputs();"
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -270,18 +283,19 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" id="distance6" name="distance6"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000">
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000">
                     </div>
                 </div>
                 <div class="col my-auto">
                     <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction6" name="direction6" type="radio" onclick="preserveInputs();"
-                          value="1">
+                        <input checked class="kekw form-check-input" id="direction6" name="direction6" type="radio"
+                          onclick="preserveInputs();" value="1">
                         <label class="form-check-label" for="direction6">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction6" name="direction6" type="radio" onclick="preserveInputs();" value="-1">
+                        <input class="kekw form-check-input" id="direction6" name="direction6" type="radio"
+                          onclick="preserveInputs();" value="-1">
                         <label class="form-check-label" for="direction6">Down</label>
                     </div>
                 </div>
@@ -294,8 +308,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed7"
-                                   name="speed7" onchange="getFormattedTimeStringFromInputs();"
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              name="speed7" onchange="getFormattedTimeStringFromInputs();"
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -305,18 +320,19 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" id="distance7" name="distance7"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000">
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000">
                     </div>
                 </div>
                 <div class="col my-auto">
                     <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction7" name="direction7" type="radio" onclick="preserveInputs();"
-                          value="1">
+                        <input checked class="kekw form-check-input" id="direction7" name="direction7" type="radio"
+                          onclick="preserveInputs();" value="1">
                         <label class="form-check-label" for="direction7">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction7" name="direction7" type="radio" onclick="preserveInputs();" value="-1">
+                        <input class="kekw form-check-input" id="direction7" name="direction7" type="radio"
+                          onclick="preserveInputs();" value="-1">
                         <label class="form-check-label" for="direction7">Down</label>
                     </div>
                 </div>
@@ -329,8 +345,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed8"
-                                   name="speed8" onchange="getFormattedTimeStringFromInputs();"
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              name="speed8" onchange="getFormattedTimeStringFromInputs();"
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -340,18 +357,19 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" id="distance8" name="distance8"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000">
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000">
                     </div>
                 </div>
                 <div class="col my-auto">
                     <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction8" name="direction8" type="radio" onclick="preserveInputs();"
-                          value="1">
+                        <input checked class="kekw form-check-input" id="direction8" name="direction8" type="radio"
+                          onclick="preserveInputs();" value="1">
                         <label class="form-check-label" for="direction8">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction8" name="direction8" type="radio" onclick="preserveInputs();" value="-1">
+                        <input class="kekw form-check-input" id="direction8" name="direction8" type="radio"
+                          onclick="preserveInputs();" value="-1">
                         <label class="form-check-label" for="direction8">Down</label>
                     </div>
                 </div>
@@ -364,8 +382,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed9"
-                                   name="speed9" onchange="getFormattedTimeStringFromInputs();"
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              name="speed9" onchange="getFormattedTimeStringFromInputs();"
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -375,23 +394,24 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" id="distance9" name="distance9"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000">
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000">
                     </div>
                 </div>
                 <div class="col my-auto">
                     <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction9" name="direction9" type="radio" onclick="preserveInputs();"
-                          value="1">
+                        <input checked class="kekw form-check-input" id="direction9" name="direction9" type="radio"
+                          onclick="preserveInputs();" value="1">
                         <label class="form-check-label" for="direction9">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction9" name="direction9" type="radio" onclick="preserveInputs();" value="-1">
+                        <input class="kekw form-check-input" id="direction9" name="direction9" type="radio"
+                          onclick="preserveInputs();" value="-1">
                         <label class="form-check-label" for="direction9">Down</label>
                     </div>
                 </div>
             </div>
-           <div class="row gx-3 gy-1 justify-content-center" id="row10" style="display:none"> 
+            <div class="row gx-3 gy-1 justify-content-center" id="row10" style="display:none">
                 <div class="col-sm">
                     <div class="mydiv" id="input_group10">
                         <div class="input-group input-group-sm mb-2">
@@ -399,8 +419,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control"
-                                   id="speed10" name="speed10" onchange="getFormattedTimeStringFromInputs();" disabled
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              id="speed10" name="speed10" onchange="getFormattedTimeStringFromInputs();" disabled
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -410,25 +431,25 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" id="distance10" name="distance10"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000" disabled>
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000" disabled>
                     </div>
                 </div>
                 <div class="col my-auto">
                     <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction10" name="direction10" type="radio" onclick="preserveInputs();"
-                          value="1" disabled>
+                        <input checked class="kekw form-check-input" id="direction10" name="direction10" type="radio"
+                          onclick="preserveInputs();" value="1" disabled>
                         <label class="form-check-label" for="direction10">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction10" name="direction10" type="radio" onclick="preserveInputs();" value="-1"
-                          disabled>
+                        <input class="kekw form-check-input" id="direction10" name="direction10" type="radio"
+                          onclick="preserveInputs();" value="-1" disabled>
                         <label class="form-check-label" for="direction10">Down</label>
                     </div>
                 </div>
             </div>
 
-           <div class="row gx-3 gy-1 justify-content-center" id="row11" style="display:none"> 
+            <div class="row gx-3 gy-1 justify-content-center" id="row11" style="display:none">
                 <div class="col-sm">
                     <div class="mydiv" id="input_group12">
                         <div class="input-group input-group-sm mb-2">
@@ -436,8 +457,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
-                                   id="speed11" name="speed11" onchange="getFormattedTimeStringFromInputs();"
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              id="speed11" name="speed11" onchange="getFormattedTimeStringFromInputs();"
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -447,8 +469,8 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" disabled id="distance11" name="distance11"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000">
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000">
                     </div>
                 </div>
                 <div class="col my-auto">
@@ -458,13 +480,13 @@
                         <label class="form-check-label" for="direction11">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" disabled id="direction11" name="direction11" type="radio" onclick="preserveInputs();"
-                          value="-1">
+                        <input class="kekw form-check-input" disabled id="direction11" name="direction11" type="radio"
+                          onclick="preserveInputs();" value="-1">
                         <label class="form-check-label" for="direction11">Down</label>
                     </div>
                 </div>
             </div>
-           <div class="row gx-3 gy-1 justify-content-center" id="row12" style="display:none"> 
+            <div class="row gx-3 gy-1 justify-content-center" id="row12" style="display:none">
                 <div class="col-sm">
                     <div class="mydiv" id="input_group13">
                         <div class="input-group input-group-sm mb-2">
@@ -472,8 +494,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
-                                   id="speed12" name="speed12" onchange="getFormattedTimeStringFromInputs();"
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              id="speed12" name="speed12" onchange="getFormattedTimeStringFromInputs();"
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -483,8 +506,8 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" disabled id="distance12" name="distance12"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000">
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000">
                     </div>
                 </div>
                 <div class="col my-auto">
@@ -494,13 +517,13 @@
                         <label class="form-check-label" for="direction12">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" disabled id="direction12" name="direction12" type="radio" onclick="preserveInputs();"
-                          value="-1">
+                        <input class="kekw form-check-input" disabled id="direction12" name="direction12" type="radio"
+                          onclick="preserveInputs();" value="-1">
                         <label class="form-check-label" for="direction12">Down</label>
                     </div>
                 </div>
             </div>
-           <div class="row gx-3 gy-1 justify-content-center" id="row13" style="display:none"> 
+            <div class="row gx-3 gy-1 justify-content-center" id="row13" style="display:none">
                 <div class="col-sm">
                     <div class="mydiv" id="input_group14">
                         <div class="input-group input-group-sm mb-2">
@@ -508,8 +531,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
-                                   id="speed13" name="speed13" onchange="getFormattedTimeStringFromInputs();"
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              id="speed13" name="speed13" onchange="getFormattedTimeStringFromInputs();"
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -519,8 +543,8 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" disabled id="distance13" name="distance13"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000">
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000">
                     </div>
                 </div>
                 <div class="col my-auto">
@@ -530,13 +554,13 @@
                         <label class="form-check-label" for="direction13">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" disabled id="direction13" name="direction13" type="radio" onclick="preserveInputs();"
-                          value="-1">
+                        <input class="kekw form-check-input" disabled id="direction13" name="direction13" type="radio"
+                          onclick="preserveInputs();" value="-1">
                         <label class="form-check-label" for="direction13">Down</label>
                     </div>
                 </div>
             </div>
-           <div class="row gx-3 gy-1 justify-content-center" id="row14" style="display:none"> 
+            <div class="row gx-3 gy-1 justify-content-center" id="row14" style="display:none">
                 <div class="col-sm">
                     <div class="mydiv" id="input_group15">
                         <div class="input-group input-group-sm mb-2">
@@ -544,8 +568,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
-                                   id="speed14" name="speed14" onchange="getFormattedTimeStringFromInputs();"
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              id="speed14" name="speed14" onchange="getFormattedTimeStringFromInputs();"
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -555,8 +580,8 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" disabled id="distance14" name="distance14"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000">
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000">
                     </div>
                 </div>
                 <div class="col my-auto">
@@ -566,13 +591,13 @@
                         <label class="form-check-label" for="direction14">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" disabled id="direction14" name="direction14" type="radio" onclick="preserveInputs();"
-                          value="-1">
+                        <input class="kekw form-check-input" disabled id="direction14" name="direction14" type="radio"
+                          onclick="preserveInputs();" value="-1">
                         <label class="form-check-label" for="direction14">Down</label>
                     </div>
                 </div>
             </div>
-           <div class="row gx-3 gy-1 justify-content-center" id="row15" style="display:none"> 
+            <div class="row gx-3 gy-1 justify-content-center" id="row15" style="display:none">
                 <div class="col-sm">
                     <div class="mydiv" id="input_group16">
                         <div class="input-group input-group-sm mb-2">
@@ -580,8 +605,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
-                                   id="speed15" name="speed15" onchange="getFormattedTimeStringFromInputs();"
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              id="speed15" name="speed15" onchange="getFormattedTimeStringFromInputs();"
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -591,8 +617,8 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" disabled id="distance15" name="distance15"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000">
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000">
                     </div>
                 </div>
                 <div class="col my-auto">
@@ -602,13 +628,13 @@
                         <label class="form-check-label" for="direction15">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" disabled id="direction15" name="direction15" type="radio" onclick="preserveInputs();"
-                          value="-1">
+                        <input class="kekw form-check-input" disabled id="direction15" name="direction15" type="radio"
+                          onclick="preserveInputs();" value="-1">
                         <label class="form-check-label" for="direction15">Down</label>
                     </div>
                 </div>
             </div>
-           <div class="row gx-3 gy-1 justify-content-center" id="row16" style="display:none"> 
+            <div class="row gx-3 gy-1 justify-content-center" id="row16" style="display:none">
                 <div class="col-sm">
                     <div class="mydiv" id="input_group17">
                         <div class="input-group input-group-sm mb-2">
@@ -616,8 +642,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
-                                   id="speed16" name="speed16" onchange="getFormattedTimeStringFromInputs();"
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              id="speed16" name="speed16" onchange="getFormattedTimeStringFromInputs();"
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -627,8 +654,8 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" disabled id="distance16" name="distance16"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000">
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000">
                     </div>
                 </div>
                 <div class="col my-auto">
@@ -638,13 +665,13 @@
                         <label class="form-check-label" for="direction16">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" disabled id="direction16" name="direction16" type="radio" onclick="preserveInputs();"
-                          value="-1">
+                        <input class="kekw form-check-input" disabled id="direction16" name="direction16" type="radio"
+                          onclick="preserveInputs();" value="-1">
                         <label class="form-check-label" for="direction16">Down</label>
                     </div>
                 </div>
             </div>
-           <div class="row gx-3 gy-1 justify-content-center" id="row17" style="display:none"> 
+            <div class="row gx-3 gy-1 justify-content-center" id="row17" style="display:none">
                 <div class="col-sm">
                     <div class="mydiv" id="input_group18">
                         <div class="input-group input-group-sm mb-2">
@@ -652,8 +679,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
-                                   id="speed17" name="speed17" onchange="getFormattedTimeStringFromInputs();"
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              id="speed17" name="speed17" onchange="getFormattedTimeStringFromInputs();"
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -663,8 +691,8 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" disabled id="distance17" name="distance17"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000">
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000">
                     </div>
                 </div>
                 <div class="col my-auto">
@@ -674,13 +702,13 @@
                         <label class="form-check-label" for="direction17">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" disabled id="direction17" name="direction17" type="radio" onclick="preserveInputs();"
-                          value="-1">
+                        <input class="kekw form-check-input" disabled id="direction17" name="direction17" type="radio"
+                          onclick="preserveInputs();" value="-1">
                         <label class="form-check-label" for="direction17">Down</label>
                     </div>
                 </div>
             </div>
-           <div class="row gx-3 gy-1 justify-content-center" id="row18" style="display:none"> 
+            <div class="row gx-3 gy-1 justify-content-center" id="row18" style="display:none">
                 <div class="col-sm">
                     <div class="mydiv" id="input_group19">
                         <div class="input-group input-group-sm mb-2">
@@ -688,8 +716,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
-                                   id="speed18" name="speed18" onchange="getFormattedTimeStringFromInputs();"
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              id="speed18" name="speed18" onchange="getFormattedTimeStringFromInputs();"
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -699,8 +728,8 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" disabled id="distance18" name="distance18"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000">
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000">
                     </div>
                 </div>
                 <div class="col my-auto">
@@ -710,13 +739,13 @@
                         <label class="form-check-label" for="direction18">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" disabled id="direction18" name="direction18" type="radio" onclick="preserveInputs();"
-                          value="-1">
+                        <input class="kekw form-check-input" disabled id="direction18" name="direction18" type="radio"
+                          onclick="preserveInputs();" value="-1">
                         <label class="form-check-label" for="direction18">Down</label>
                     </div>
                 </div>
             </div>
-           <div class="row gx-3 gy-1 justify-content-center" id="row19" style="display:none"> 
+            <div class="row gx-3 gy-1 justify-content-center" id="row19" style="display:none">
                 <div class="col-sm">
                     <div class="mydiv" id="input_group20">
                         <div class="input-group input-group-sm mb-2">
@@ -724,8 +753,9 @@
                                 <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
                             </div>
                             <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
-                                   id="speed19" name="speed19" onchange="getFormattedTimeStringFromInputs();"
-                                   onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number" value="5000">
+                              id="speed19" name="speed19" onchange="getFormattedTimeStringFromInputs();"
+                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
+                              value="5000">
                         </div>
                     </div>
                 </div>
@@ -735,8 +765,8 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
                         </div>
                         <input class="kekw myinput form-control input-sm" disabled id="distance19" name="distance19"
-                               onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                               placeholder="Attālums" type="number" value="1000">
+                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                          placeholder="Attālums" type="number" value="1000">
                     </div>
                 </div>
                 <div class="col my-auto">
@@ -746,8 +776,8 @@
                         <label class="form-check-label" for="direction19">Up</label>
                     </div>
                     <div class="form-check-inline">
-                        <input class="kekw form-check-input" disabled id="direction19" name="direction19" type="radio" onclick="preserveInputs();"
-                          value="-1">
+                        <input class="kekw form-check-input" disabled id="direction19" name="direction19" type="radio"
+                          onclick="preserveInputs();" value="-1">
                         <label class="form-check-label" for="direction19">Down</label>
                     </div>
                 </div>
@@ -757,25 +787,25 @@
                 Submit and Start
             </button>
             <div aria-label="Toolbar with button groups" class="btn-toolbar" role="toolbar" style="display: inline">
-                <button class="btn btn-primary" id="go_to_top" name="foo" onclick="sendToTopRequest()"
-                  type="button" value="go_to_top">Go to the
+                <button class="btn btn-primary" id="go_to_top" name="foo" onclick="sendToTopRequest()" type="button"
+                  value="go_to_top">Go to the
                     top
                 </button>
                 <button class="btn btn-warning" disabled id="pause" name="pause" onclick="sendPauseRequest()"
                   type="button" value="pause">Pause
                 </button>
-                <button class="btn btn-danger" disabled id="stop" name="stop" onclick="sendStopRequest()"
-                  type="button" value="stop">Stop
+                <button class="btn btn-danger" disabled id="stop" name="stop" onclick="sendStopRequest()" type="button"
+                  value="stop">Stop
                 </button>
             </div>
 
 
         </form>
-<button onclick="test();">test!</button>
-
         <script crossorigin="anonymous"
           integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
           src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="js/helpers.js" type="text/javascript"></script>
+        <script src="js/my_Js.js" type="text/javascript"></script>
 </body>
 
 </html>

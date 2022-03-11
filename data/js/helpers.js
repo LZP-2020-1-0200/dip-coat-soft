@@ -62,3 +62,10 @@ function documentReady(fn) {
         document.addEventListener('DOMContentLoaded', fn);
     }
 }
+
+function allInputWrapper(fun){
+    const all_rows = document.getElementsByClassName("row gx-3 gy-1 justify-content-center");
+    Array.from(all_rows).forEach(row => {
+        fun(row);
+    });
+}
