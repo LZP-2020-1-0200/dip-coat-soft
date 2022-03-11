@@ -123,6 +123,8 @@ function updateButtonStates() {
     document.getElementById('percentage').style.display = is_working ? "block" : "none";
     document.getElementById('remaining_time').style.display = is_working ? "inline" : "none";
     document.getElementById('hetyo').style.display = is_working ? "block" : "none";
+
+    Array.from(document.getElementsByTagName("input")).forEach(row => row.disabled = is_working);
 }
 
 function preserveInputs() {
