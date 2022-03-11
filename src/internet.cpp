@@ -1,10 +1,10 @@
 #include "internet.h"
 
-// const char *ssid = "KEKW 2.4";
-// const char *password = "Pepelsin32!";
+const char *ssid = "KEKW 2.4";
+const char *password = "Pepelsin32!";
 
-const char *ssid = "NanoLab";
-const char *password = "Mikro2015";
+// const char *ssid = "NanoLab";
+// const char *password = "Mikro2015";
 
 // const char *ssid = "Vladislavs";
 // const char *password = "";

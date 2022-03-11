@@ -57,12 +57,12 @@ void loop()
     go_to_top = !go_to_top;
     return;
   }
-
+  total_passed_time = 0;
   // itereate for every input recieved
   for (input x : inputs)
   {
     // if speed is zero, then all valid inputs are executed and loop ends
-    if (x.speed == 0)
+    if (!x.speed)
     {
       break;
     }
@@ -84,6 +84,7 @@ void loop()
       {
         stopped = !stopped;
         submitted = false;
+        total_passed_time = 0;
         return;
       }
 
@@ -95,6 +96,7 @@ void loop()
 
         // Skip first previous millis
         passed_time += previousMillis ? (currentMillis - previousMillis) : 0;
+        total_passed_time += previousMillis ? (currentMillis - previousMillis) : 0;
 
         previousMillis = currentMillis;
         ledstate = ledstate == HIGH ? LOW : HIGH;
