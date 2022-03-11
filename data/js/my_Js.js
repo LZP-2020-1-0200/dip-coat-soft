@@ -3,25 +3,27 @@ const interval = 10 * 1000;
 // 33 ms on frame
 const frames_per_second = (1 / 30) * 1e3;
 
+let progress_percentage = 0;
+let time_needed = 0;
+
+let is_working = false;
+let is_paused = false;
+
+let startTime;
+
 let sendToTopRequest = () => fetch("go_to_top", { method: 'POST', }).then(response => response.text()).then(response => alert(response));
 
-let sendStopRequest = () => fetch("stop", { method: 'POST' }).then(response => response.text()).then(response => {
-    alert(response);
-    sessionStorage.pause_btn = true;
-    sessionStorage.stop_btn = true;
-    sessionStorage.add_row_btn = false;
-    sessionStorage.hide_row_btn = false;
-    sessionStorage.go_to_top_btn = false;
-    sessionStorage.submit_btn = false;
-    sessionStorage.progress_percentage = 0;
+let sendStopRequest = () => fetch("stop", { method: 'POST' }).then(response => response.text()).then(() => {
+    is_working = false;
+    progress_percentage = 0;
     updateButtonStates();
-    updateProgressBarValues(sessionStorage.progress_percentage);
+    updateProgressBarValues(progress_percentage);
 });
 
-let sendPauseRequest = () => fetch("pause", { method: "POST", }).then(response => response.text()).then(response => {
-    alert(response);
-    sessionStorage.paused = sessionStorage.paused === "true" ? "false" : "true";
-    updateButtonStates();
+let sendPauseRequest = () => fetch("pause", { method: "POST", }).then(response => response.text()).then(() => {
+    is_paused = !is_paused;
+    changeInnerHTMLbyID("pause", is_paused ? "Unpause" : "Pause");
+    document.getElementById('stop').disabled = is_paused;
 });
 
 function calculateSecondsNeededFromInputs() {
@@ -40,6 +42,7 @@ function calculateSecondsNeededFromInputs() {
 function getFormattedTimeStringFromInputs() {
     let seconds = calculateSecondsNeededFromInputs();
     let time_string = secondsToTimeString(seconds);
+    preserveInputs();
     changeInnerHTMLbyID("ajaxtest", "Calculated time: " + time_string);
 }
 
@@ -52,13 +55,9 @@ function hideRow() {
             row.style.display = "none";
             const all_inputs = row.getElementsByTagName("input");
             Array.from(all_inputs).forEach(input => input.disabled = true);
-            update_input_count(-1);
         }
     });
     getFormattedTimeStringFromInputs();
-
-    console.log("number of inputs", sessionStorage.inputCount);
-    updateProgressBarValues(0);
 }
 
 function addRow() {
@@ -70,154 +69,134 @@ function addRow() {
             row.style.display = "";
             const all_inputs = row.getElementsByTagName("input");
             Array.from(all_inputs).forEach(input => input.disabled = false);
-            update_input_count(1);
         }
     });
     getFormattedTimeStringFromInputs();
-
-    console.log("number of inputs", sessionStorage.inputCount);
-    updateProgressBarValues(0);
 }
 
 function updateProgressBar() {
-    const percentage_per_millisecond = (1 / (Number(sessionStorage.time_needed) * 1e3)) * 100;
+    const percentage_per_millisecond = (1 / (time_needed * 1e3)) * 100;
 
-    if ((Number(sessionStorage.progress_percentage) >= 100)) {
-        sessionStorage.pause_btn = true;
-        sessionStorage.stop_btn = true;
-        sessionStorage.add_row_btn = false;
-        sessionStorage.hide_row_btn = false;
-        sessionStorage.go_to_top_btn = false;
-        sessionStorage.submit_btn = false;
+    if (progress_percentage >= 100) {
+        is_working = false;
         updateButtonStates();
         return;
     }
 
-    if (sessionStorage.getItem("paused") === "true") {
+    if (!is_working) {
+        return;
+    }
+
+    if (is_paused) {
         return;
     }
 
     let previousTime = performance.now();
 
-    if (previousTime - Number(sessionStorage.startTime) >= interval) {
-        sessionStorage.startTime = performance.now();
+    if (previousTime - startTime >= interval) {
+        startTime = performance.now();
         fetch("get_passed_time", { method: 'POST', })
             .then(response_time => response_time.text())
             .then(response_time => {
                 let passed_time = parseInt(response_time) / 1e3;
-                sessionStorage.progress_percentage = (passed_time / Number(sessionStorage.time_needed) * 100);
-                console.log("Post request: ", sessionStorage.progress_percentage);
+                progress_percentage = (passed_time / Number(time_needed) * 100) || 0;
+                console.log("Post request percentage: ", progress_percentage);
             });
 
     } else {
-
-        if (sessionStorage.progress_percentage === "0") {
-            return;
-        }
-        sessionStorage.progress_percentage = Number(sessionStorage.progress_percentage) + percentage_per_millisecond * (frames_per_second);
+        progress_percentage = Number(progress_percentage) + percentage_per_millisecond * (frames_per_second);
     }
 
-    let remaining_time_string = getRemainingTime(sessionStorage.progress_percentage, sessionStorage.time_needed);
-    updateProgressBarValues(sessionStorage.progress_percentage);
+    let remaining_time_string = getRemainingTime(progress_percentage, time_needed);
+    updateProgressBarValues(progress_percentage);
     changeInnerHTMLbyID('remaining_time', remaining_time_string);
 }
 
 function updateButtonStates() {
-    document.getElementById('pause').disabled = (sessionStorage.pause_btn) === "true";
-    document.getElementById('stop').disabled = (sessionStorage.stop_btn) === "true";
-    document.getElementById('add_row').disabled = (sessionStorage.add_row_btn) === "true";
-    document.getElementById('hide_row').disabled = (sessionStorage.hide_row_btn) === "true";
-    document.getElementById('go_to_top').disabled = (sessionStorage.go_to_top_btn) === "true";
-    document.getElementById('submit').disabled = (sessionStorage.submit_btn) === "true";
+    document.getElementById('pause').disabled = !is_working;
+    document.getElementById('stop').disabled = !is_working;
+    document.getElementById('add_row').disabled = is_working;
+    document.getElementById('hide_row').disabled = is_working;
+    document.getElementById('go_to_top').disabled = is_working;
+    document.getElementById('submit').disabled = is_working;
 
-    if (sessionStorage.submit_btn === "true") {
-        document.getElementById('percentage').style.display = "block";
-        document.getElementById('remaining_time').style.display = "inline";
-        document.getElementById('hetyo').style.display = 'block';
-    } else {
-        document.getElementById('percentage').style.display = "none";
-        document.getElementById('remaining_time').style.display = "none";
-        document.getElementById('hetyo').style.display = 'none';
-    }
+    document.getElementById('percentage').style.display = is_working ? "block" : "none";
+    document.getElementById('remaining_time').style.display = is_working ? "inline" : "none";
+    document.getElementById('hetyo').style.display = is_working ? "block" : "none";
 }
 
 function preserveInputs() {
     let array = [];
     let inputs = document.getElementsByClassName('kekw');
     for (let i = 0; i < inputs.length; i += 4) {
+        // Speed
         array.push(parseInt(inputs[i].value));
+        // Distance
         array.push(parseInt(inputs[i + 1].value));
+        // Up (1) or Down(-1)
         array.push(inputs[i + 2].checked ? 1 : -1);
-        array.push(inputs[i + 3].checked ? 1 : -1);
+        // Disabled (1) or Enabled (-1)
+        array.push(inputs[i].disabled ? 1 : -1);
+
     }
     sessionStorage.inputArray = JSON.stringify(array);
-    console.log(sessionStorage.inputArray);
+}
+
+function restoreInputsAfterRefresh() {
+    const all_rows = document.getElementsByClassName("row gx-3 gy-1 justify-content-center");
+    const inputs = document.getElementsByClassName('kekw');
+    const array = JSON.parse(sessionStorage.inputArray);
+
+    for (let i = 0; i < inputs.length; i += 4) {
+        inputs[i].value = array[i];
+        inputs[i + 1].value = array[i + 1];
+        array[i + 2] === 1 ? inputs[i + 2].checked = true : inputs[i + 3].checked = true;
+
+        // inputs[i + 2].checked = array[i + 2] === 1;
+
+    }
+
+    let counter = 3;
+
+    Array.from(all_rows).forEach(row => {
+
+        if (array[counter] === 1) {
+            row.style.display = "none";
+            Array.from(row.getElementsByTagName("input")).forEach(input => input.disabled = true);
+
+
+        }
+
+        else {
+            Array.from(row.getElementsByTagName("input")).forEach(input => input.disabled = false);
+            row.style.display = "";
+
+        }
+        counter += 4;
+    });
+
+
+
 }
 
 documentReady(() => {
+
+    sessionStorage.inputArray && restoreInputsAfterRefresh();
+
     fetch("get_passed_time", { method: "POST", }).then(response => response.text()).then(response => {
         let passed_time = parseInt(response);
-        sessionStorage.progress_percentage = (passed_time / Number(sessionStorage.time_needed) * 100);
-        sessionStorage.startTime = performance.now();
-        console.log("On document load: ", passed_time);
+        progress_percentage = (passed_time / Number(time_needed) * 100) || 0;
+        startTime = performance.now();
+        console.log("On document load passed time: ", passed_time);
     });
-
-    test();
-
-    if (sessionStorage.inputArray) {
-        let inputs = document.getElementsByClassName('kekw');
-        let array = JSON.parse(sessionStorage.inputArray);
-
-        for (let i = 0; i < inputs.length; i += 4) {
-            inputs[i].value = array[i];
-            inputs[i + 1].value = array[i + 1];
-            inputs[i + 2].checked = array[i + 2] === 1;
-            inputs[i + 3].checked = array[i + 3] === 1;
-        }
-    }
-
-    if (sessionStorage.pause_btn) {
-        updateButtonStates();
-    }
-
-    if (!sessionStorage.inputCount) {
-
-        sessionStorage.inputCount = 10;
-        console.log("inside localstorage inputcount", sessionStorage.inputCount);
-    }
-
-    if (sessionStorage.inputCount) {
-        console.log(sessionStorage.inputCount);
-        let row_difference = Number(sessionStorage.inputCount) - 10;
-        while (row_difference !== 0) {
-
-            console.log(row_difference);
-
-            if (row_difference < 0) {
-                hideRow();
-                update_input_count(1);
-                row_difference++;
-            }
-
-            if (row_difference > 0) {
-                addRow();
-                update_input_count(-1);
-                row_difference--;
-            }
-        }
-    }
 
     getFormattedTimeStringFromInputs();
     updateProgressBar = setInterval(updateProgressBar, frames_per_second);
 });
 
-let update_input_count = number => sessionStorage.inputCount = Number(sessionStorage.inputCount) + number;
-
 function submitForm() {
     let fd = new FormData(document.getElementById('myform'));
     let data = convertInputsToJSON(fd);
-
-
 
     fetch("submit",
         {
@@ -225,25 +204,13 @@ function submitForm() {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, // this line is important, if this content-type is not set it wont work
             body: data,
         }).then((response) => response.text()).then((response => {
-            sessionStorage.time_needed = calculateSecondsNeededFromInputs();
-            sessionStorage.time_passed = 0;
-            sessionStorage.pause_btn = false;
-            sessionStorage.stop_btn = false;
-            sessionStorage.add_row_btn = true;
-            sessionStorage.hide_row_btn = true;
-            sessionStorage.go_to_top_btn = true;
-            sessionStorage.submit_btn = true;
-            sessionStorage.progress_percentage = 0;
+            progress_percentage = 0;
+            time_needed = calculateSecondsNeededFromInputs();
+            is_working = true;
 
-
-            document.getElementById('percentage').style.display = "block";
-            document.getElementById('hetyo').style.display = "block";
-            document.getElementById('remaining_time').style.display = 'inline';
-            document.getElementById('remaining_time').innerHTML = secondsToTimeString(sessionStorage.time_needed || calculateSecondsNeededFromInputs());
-
+            changeInnerHTMLbyID("remaining_time", secondsToTimeString(time_needed || calculateSecondsNeededFromInputs()));
 
             updateButtonStates();
-            preserveInputs();
             alert(response);
         }));
 
@@ -252,10 +219,10 @@ function submitForm() {
 
 function test() {
     changeInnerHTMLbyID('remaining_time', getRemainingTime(97.5, 5600));
-    fetch("recieve_inputs",{method: 'POST'}).then(response => response.json()).then(response => {
-        console.log(response);
-        
-        if (typeof response === "string") {
+    fetch("recieve_inputs", { method: 'POST' }).then(response => response.json()).then(response => {
+
+
+        if (Object.keys(response).length === 0 && response.constructor === Object) {
             return;
         }
 
