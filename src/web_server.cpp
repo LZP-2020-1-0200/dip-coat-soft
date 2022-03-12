@@ -79,11 +79,10 @@ void initialize_server()
 
     server.on("/submit", HTTP_POST, [](AsyncWebServerRequest *request)
               {
-                  
                   submitted = false;
                   AsyncWebParameter *p = request->getParam(0);
                   DeserializationError err = deserializeJson(doc, p->value());
-                    
+
                   if (err)
                   {
                       Serial.print(F("deserializeJson() returned "));
@@ -108,14 +107,10 @@ void initialize_server()
 
                   print_input();
                   submitted = true;
-                  request->send(200, "text/plain", "success");
-                  
-                   });
+                  request->send(200, "text/plain", "success"); });
 
     server.on("/get_programms", HTTP_POST, [](AsyncWebServerRequest *request)
-              { request->send(LittleFS, "/programms/test.txt", "text/plain"); 
-              
-              });
+              { request->send(LittleFS, "/programms/test.txt", "text/plain"); });
 
     server.begin();
 }

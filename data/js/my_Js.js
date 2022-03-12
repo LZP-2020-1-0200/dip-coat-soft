@@ -1,5 +1,5 @@
-// Every 10 seconds
-const interval = 10 * 1000;
+// Every 8 seconds
+let interval = 8 * 1e3;
 // 33 ms on frame
 const frames_per_second = (1 / 30) * 1e3;
 
@@ -8,17 +8,72 @@ let time_needed = 0;
 
 let is_working = false;
 let is_paused = false;
-
 let startTime;
+
+
+documentReady(() => {
+    sessionStorage.inputArray && restoreInputsAfterRefresh();
+    getFormattedTimeStringFromInputs();
+
+    fetch("recieve_inputs", { method: 'POST' }).then(response => response.json()).then(response => {
+
+        if (Object.keys(response).length === 0 && response.constructor === Object) {
+            console.log("Not working");
+            is_working = false;
+            return;
+        }
+
+        console.log(response);
+        let i = 0;
+        const all_rows = document.getElementsByClassName("row gx-3 gy-1 justify-content-center");
+        let time1 = 0;
+
+        for (const row of Object.keys(response)) {
+            const row_inputs = all_rows[i].getElementsByClassName("kekw");
+            row_inputs[0].value = response[row]["speed"];
+            row_inputs[1].value = response[row]["distance"];
+            response[row]["direction"] == 1 ? row_inputs[2].checked = true : row_inputs[3].checked = true;
+
+            response[row]["hidden"] === 1 ? all_rows[i].style.display = "none" : all_rows[i].style.display = "";
+
+            if (response[row]["hidden"] !== 1)
+                time_needed += (response[row]["distance"] * 1000) / response[row]["speed"];
+
+            console.log(response[row]["hidden"] === 1);
+            row_inputs[0].disabled = response[row]["hidden"] === 1;
+            row_inputs[1].disabled = response[row]["hidden"] === 1;
+            row_inputs[2].disabled = response[row]["hidden"] === 1;
+            row_inputs[3].disabled = response[row]["hidden"] === 1;
+            i++;
+        }
+        is_working = true;
+        updateButtonStates();
+        changeInnerHTMLbyID("ajaxtest", "Calculated time: " + secondsToTimeString(time1));
+        console.log(time_needed);
+
+    }).then(() => {
+        fetch("get_passed_time", { method: "POST", }).then(response => response.text()).then(response => {
+            let passed_time = parseInt(response) / 1e3;
+            progress_percentage = (passed_time / time_needed * 100) || 0;
+            console.log("time needed : ", time_needed);
+            console.log("Percentage from response ", progress_percentage);
+            startTime = performance.now();
+            setInterval(updateProgressBar, frames_per_second);
+        });
+    });
+
+
+});
 
 let sendToTopRequest = () => fetch("go_to_top", { method: 'POST', }).then(response => response.text()).then(response => alert(response));
 
-let sendStopRequest = () => fetch("stop", { method: 'POST' }).then(response => response.text()).then(() => {
+let sendStopRequest = () => {
     is_working = false;
     progress_percentage = 0;
     updateButtonStates();
     updateProgressBarValues(progress_percentage);
-});
+    fetch("stop", { method: 'POST' });
+};
 
 let sendPauseRequest = () => fetch("pause", { method: "POST", }).then(response => response.text()).then(() => {
     is_paused = !is_paused;
@@ -77,17 +132,19 @@ function addRow() {
 function updateProgressBar() {
     const percentage_per_millisecond = (1 / (time_needed * 1e3)) * 100;
 
-    if (progress_percentage >= 100) {
-        is_working = false;
-        updateButtonStates();
-        return;
-    }
-
     if (!is_working) {
         return;
     }
 
     if (is_paused) {
+        return;
+    }
+
+    if (progress_percentage <= 0) {
+        is_working = false;
+        updateButtonStates();
+        progress_percentage = 0;
+        updateProgressBarValues(progress_percentage);
         return;
     }
 
@@ -99,8 +156,20 @@ function updateProgressBar() {
             .then(response_time => response_time.text())
             .then(response_time => {
                 let passed_time = parseInt(response_time) / 1e3;
-                progress_percentage = (passed_time / Number(time_needed) * 100) || 0;
+                progress_percentage = (passed_time / time_needed * 100) || 0;
                 console.log("Post request percentage: ", progress_percentage);
+                if (time_needed - passed_time <= 11) {
+                    interval = 1 * 1e3;
+
+                    if (time_needed - passed_time < 2) {
+                        is_working = false;
+                        interval = 5 * 1e3;
+                        updateButtonStates();
+                        progress_percentage = 0;
+                        updateProgressBarValues(progress_percentage);
+
+                    }
+                }
             });
 
     } else {
@@ -112,7 +181,11 @@ function updateProgressBar() {
     changeInnerHTMLbyID('remaining_time', remaining_time_string);
 }
 
-function updateButtonStates() {
+async function updateButtonStates() {
+    response = await fetch("recieve_inputs", { method: 'POST' });
+    elements = await response.json();
+
+    console.log(elements);
     document.getElementById('pause').disabled = !is_working;
     document.getElementById('stop').disabled = !is_working;
     document.getElementById('add_row').disabled = is_working;
@@ -123,8 +196,26 @@ function updateButtonStates() {
     document.getElementById('percentage').style.display = is_working ? "block" : "none";
     document.getElementById('remaining_time').style.display = is_working ? "inline" : "none";
     document.getElementById('hetyo').style.display = is_working ? "block" : "none";
+    let i = 0;
+    const all_rows = document.getElementsByClassName("row gx-3 gy-1 justify-content-center");
 
-    Array.from(document.getElementsByClassName('kekw')).forEach(row => row.disabled = is_working);
+
+    for (const row of Object.keys(elements)) {
+        const row_inputs = all_rows[i].getElementsByClassName("kekw");
+
+
+        if (is_working) {
+            Array.from(row_inputs).forEach(row2 => row2.disabled = true);
+        }
+
+        else {
+            row_inputs[0].disabled = elements[row]["hidden"] === 1;
+            row_inputs[1].disabled = elements[row]["hidden"] === 1;
+            row_inputs[2].disabled = elements[row]["hidden"] === 1;
+            row_inputs[3].disabled = elements[row]["hidden"] === 1;
+        }
+        i++;
+    }
 }
 
 function preserveInputs() {
@@ -139,9 +230,8 @@ function preserveInputs() {
         array.push(inputs[i + 2].checked ? 1 : -1);
         // Disabled (1) or Enabled (-1)
         array.push(inputs[i].disabled ? 1 : -1);
-
     }
-    console.log(array);
+    // console.log(array);
     sessionStorage.inputArray = JSON.stringify(array);
 }
 
@@ -170,81 +260,20 @@ function restoreInputsAfterRefresh() {
         counter += 4;
     });
     getFormattedTimeStringFromInputs();
-
-
-
 }
 
 function fillInputs() {
     const all_rows = document.getElementsByClassName("row gx-3 gy-1 justify-content-center");
     Array.from(all_rows).forEach(row => {
         const all_inputs = row.getElementsByTagName("input");
-        all_inputs[0].value = randomNumber(5000,20000);
-        all_inputs[1].value = randomNumber(100,500);
+        all_inputs[0].value = randomNumber(5000, 20000);
+        all_inputs[1].value = randomNumber(100, 500);
 
-        randomNumber(0,1) === 0 ? all_inputs[2].checked = true : all_inputs[3].checked = true;
-       
+        randomNumber(0, 1) === 0 ? all_inputs[2].checked = true : all_inputs[3].checked = true;
+
     });
     getFormattedTimeStringFromInputs();
 }
-
-documentReady(() => {
-
-
-    sessionStorage.inputArray && restoreInputsAfterRefresh();
-    getFormattedTimeStringFromInputs();
-   
-
-    fetch("recieve_inputs", { method: 'POST' }).then(response => response.json()).then(response => {
-
-        if (Object.keys(response).length === 0 && response.constructor === Object) {
-            console.log("Not working");
-            is_working = false;
-            return;
-        }
-
-        console.log(response);
-
-        let i = 0;
-        const all_rows = document.getElementsByClassName("row gx-3 gy-1 justify-content-center");
-        let time1 = 0;
-
-        for (const row of Object.keys(response)) {
-            const row_inputs = all_rows[i].getElementsByClassName("kekw");
-            row_inputs[0].value = response[row]["speed"];
-            row_inputs[1].value = response[row]["distance"];
-            response[row]["direction"] == 1 ? row_inputs[2].checked = true : row_inputs[3].checked = true;
-
-            response[row]["hidden"] === 1 ? all_rows[i].style.display = "none" : all_rows[i].style.display = "";
-
-            if (response[row]["hidden"] !== 1)
-                time1 += (response[row]["distance"] * 1000) / response[row]["speed"];
-
-            row_inputs[0].disabled = response[row]["hidden"] === 1;
-            row_inputs[1].disabled = response[row]["hidden"] === 1;
-            row_inputs[2].disabled = response[row]["hidden"] === 1;
-            row_inputs[3].disabled = response[row]["hidden"] === 1;
-            i++;
-        }
-        is_working = true;
-        updateButtonStates();
-        time_needed = time1;
-        changeInnerHTMLbyID("ajaxtest", "Calculated time: " + secondsToTimeString(time1));
-        console.log(time_needed);
-
-    }).then(() => {
-        fetch("get_passed_time", { method: "POST", }).then(response => response.text()).then(response => {
-            let passed_time = parseInt(response) / 1e3;
-            progress_percentage = (passed_time / time_needed * 100) || 0;
-            console.log("time needed : ", time_needed);
-            console.log("Percentage from response ", progress_percentage);
-            startTime = performance.now();
-            updateProgressBar = setInterval(updateProgressBar, frames_per_second);
-        });
-    });
-
-
-});
 
 function submitForm() {
     let fd = new FormData(document.getElementById('myform'));
@@ -256,22 +285,20 @@ function submitForm() {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, // this line is important, if this content-type is not set it wont work
             body: data,
         }).then((response) => response.text()).then((response => {
-            progress_percentage = 0;
+            progress_percentage = 0.001;
+            time_passed = 0;
             time_needed = calculateSecondsNeededFromInputs();
             is_working = true;
-
+            startTime = performance.now();
             changeInnerHTMLbyID("remaining_time", secondsToTimeString(time_needed || calculateSecondsNeededFromInputs()));
-
             updateButtonStates();
             alert(response);
         }));
 
 }
 
-
-
-async function recieveFromESP8266(){
-    let response = await fetch("get_programms",{method: "POST",});
+async function recieveFromESP8266() {
+    let response = await fetch("get_programms", { method: "POST", });
     let answer = await response.text();
     console.log(answer);
 }

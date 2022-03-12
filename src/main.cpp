@@ -13,7 +13,6 @@ uint8_t ledstate = LOW;
 void setup()
 {
   Serial.begin(74880);
-  
 
   pinMode(LEDPIN, HIGH);
   pinMode(STEPPER_LINE1, OUTPUT);
@@ -36,8 +35,6 @@ void setup()
     return;
   }
 
-
-
   if (!initialize_wifi())
   {
     Serial.println("\nCould not connect to WiFi");
@@ -45,13 +42,10 @@ void setup()
   }
 
   initialize_server();
-
-    printData();
 }
 
 void loop()
 {
-
   if (!submitted && !go_to_top)
   {
     return;
@@ -63,7 +57,7 @@ void loop()
     go_to_top = !go_to_top;
     return;
   }
-  total_passed_time = 0;
+  
   // itereate for every input recieved
   for (input x : inputs)
   {
@@ -101,20 +95,19 @@ void loop()
         continue;
       }
 
-      // It breaks without this line... why?
-      // Serial.println((x.milli_seconds - passed_time));
-
       // Skip first previous millis
       passed_time += previousMillis ? (currentMillis - previousMillis) : 0;
       total_passed_time += previousMillis ? (currentMillis - previousMillis) : 0;
 
       previousMillis = currentMillis;
       ledstate = ledstate == HIGH ? LOW : HIGH;
-      
+      digitalWrite(LEDPIN,ledstate);
 
       position += x.direction;
       make_step(position & 0x3);
     }
   }
   submitted = false;
+  total_passed_time = 0;
+  clear_inputs();
 }
