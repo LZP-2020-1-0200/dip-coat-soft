@@ -1,814 +1,848 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
-    <link href="images/favicon.png" rel="icon" type="image/png" />
+    <link href="images/favicon.png" rel="icon" type="image/png"/>
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
     <link href="css/mycss.css" rel="stylesheet">
 
     <title>Stepper by Vladislavs❤</title>
 </head>
 
 <body>
+<div class="container mt-3">
 
-    <div class="container mt-3">
-        <header class="container pt-2 pb-0" style="padding-bottom: 20px;">
-            <h2>Progress:</h2>
-            <h5 style="display:none" class="text-center mt-2" id="percentage"></h5>
-            <div class="progress my-2" style='height: 30px;'>
+    <header class="container pt-2 pb-0">
+        <h2 class="pb-2">Progress:</h2>
+        <h5 class="text-center mt-2" id="percentage" style="display:none"></h5>
+        <div class="progress my-2" style='height: 35px;'>
+            <div aria-valuemax="100" aria-valuemin="0"
+                 class="progress-bar progress-bar-striped progress-bar-animated bg-success" id="progress_bar"
+                 role="progressbar" style='width: 0'>
+            </div>
+        </div>
+        <h6 class="text-center mt-3" id="remaining_time_wrapper" style="display:none">
+            Remaining time: <span id="remaining_time" style="display:inline;">00:00:00</span>
+        </h6>
+        <h3 class="mt-3" id="calculated_time"></h3>
+    </header>
 
-                <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="75"
-                  class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
-                  style='width: 0' id="progress_bar">
+    <div aria-label="Toolbar with button groups" class="btn-toolbar m-3 ms-0 " role="toolbar">
+        <button class="btn btn-success m-1" id="add_row" onclick="addRow()" value="add_row">Add row</button>
+        <button class="btn btn-danger m-1" id="hide_row" onclick="hideRow();" value="hide_row">Remove row</button>
+    </div>
+
+    <form action="/submit" id="stepper_form" method="POST" name="stepper_form">
+
+        <div class="row gx-3 gy-1 justify-content-center" id="row0" style="display:flex">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
+                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control"
+                           id="speed0" name="speed0" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
                 </div>
             </div>
-            <h6 class="text-center mt-3" style="display:none" id="hetyo">Remaining time: <span style="display:inline;"
-                  id="remaining_time">00:00:00</span>
-            </h6>
-            <h3 class="mt-3" id="ajaxtest"></h3>
-        </header>
-
-        <div aria-label="Toolbar with button groups" class="btn-toolbar me-2 m-3 ml-0" role="toolbar">
-            <button class="btn btn-success m-1" id="add_row" onclick="addRow()" value="add_row">Add row</button>
-            <button class="btn btn-danger m-1" id="hide_row" onclick="hideRow();" value="hide_row">Remove row</button>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
+                    </div>
+                    <input class="kekw myinput form-control input-sm" id="distance0" name="distance0"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
+                </div>
+            </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" id="direction_up0" name="direction_up0"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up0">Up</label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" id="direction_up0" name="direction_up0"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up0">Down</label>
+                </div>
+            </div>
         </div>
 
-        <form action="/submit" id="myform" method="POST" name="myform" id="myform">
-            <div class="row gx-3 gy-1 justify-content-center" id="row0" style="display:flex;">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group0">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed0"
-                              name="speed0" onchange="getFormattedTimeStringFromInputs();"
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
+        <div class="row gx-3 gy-1 justify-content-center" id="row1" style="display:flex">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
                     </div>
-                </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" id="distance0" name="distance0"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000">
-                    </div>
-                </div>
-                <div class="col-sm my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction0" name="direction0" type="radio"
-                          onclick="preserveInputs();" value="1">
-                        <label class="form-check-label" for="direction0">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction0" name="direction0" type="radio"
-                          onclick="preserveInputs();" value="-1">
-                        <label class="form-check-label" for="direction0">Down</label>
-                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control"
+                           id="speed1" name="speed1" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
                 </div>
             </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
+                    </div>
+                    <input class="kekw myinput form-control input-sm" id="distance1" name="distance1"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
+                </div>
+            </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" id="direction_up1" name="direction_up1"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up1">Up</label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" id="direction_up1" name="direction_up1"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up1">Down</label>
+                </div>
+            </div>
+        </div>
 
-            <div class="row gx-3 gy-1 justify-content-center" id="row1" style="display:flex;">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group1">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed1"
-                              name="speed1" onchange="getFormattedTimeStringFromInputs();"
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
+        <div class="row gx-3 gy-1 justify-content-center" id="row2" style="display:flex">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
                     </div>
-                </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" id="distance1" name="distance1"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000">
-                    </div>
-                </div>
-                <div class="col my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction1" name="direction1" type="radio"
-                          onclick="preserveInputs();" value="1">
-                        <label class="form-check-label" for="direction1">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction1" name="direction1" type="radio"
-                          onclick="preserveInputs();" value="-1">
-                        <label class="form-check-label" for="direction1">Down</label>
-                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control"
+                           id="speed2" name="speed2" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
                 </div>
             </div>
-            <div class="row gx-3 gy-1 justify-content-center" id="row2" style="display:flex;">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group2">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed2"
-                              name="speed2" onchange="getFormattedTimeStringFromInputs();"
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
                     </div>
-                </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" id="distance2" name="distance2"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000">
-                    </div>
-                </div>
-                <div class="col my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction2" name="direction2" type="radio"
-                          onclick="preserveInputs();" value="1">
-                        <label class="form-check-label" for="direction2">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction2" name="direction2" type="radio"
-                          onclick="preserveInputs();" value="-1">
-                        <label class="form-check-label" for="direction2">Down</label>
-                    </div>
+                    <input class="kekw myinput form-control input-sm" id="distance2" name="distance2"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
                 </div>
             </div>
-            <div class="row gx-3 gy-1 justify-content-center" id="row3" style="display:flex;">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group3">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed3"
-                              name="speed3" onchange="getFormattedTimeStringFromInputs();"
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
-                    </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" id="direction_up2" name="direction_up2"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up2">Up</label>
                 </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" id="distance3" name="distance3"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000">
-                    </div>
-                </div>
-                <div class="col my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction3" name="direction3" type="radio"
-                          onclick="preserveInputs();" value="1">
-                        <label class="form-check-label" for="direction3">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction3" name="direction3" type="radio"
-                          onclick="preserveInputs();" value="-1">
-                        <label class="form-check-label" for="direction3">Down</label>
-                    </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" id="direction_up2" name="direction_up2"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up2">Down</label>
                 </div>
             </div>
-            <div class="row gx-3 gy-1 justify-content-center" id="row4" style="display:flex;">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group4">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed4"
-                              name="speed4" onchange="getFormattedTimeStringFromInputs();"
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" id="distance4" name="distance4"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000">
-                    </div>
-                </div>
-                <div class="col my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction4" name="direction4" type="radio"
-                          onclick="preserveInputs();" value="1">
-                        <label class="form-check-label" for="direction4">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction4" name="direction4" type="radio"
-                          onclick="preserveInputs();" value="-1">
-                        <label class="form-check-label" for="direction4">Down</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row gx-3 gy-1 justify-content-center" id="row5" style="display:flex;">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group5">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed5"
-                              name="speed5" onchange="getFormattedTimeStringFromInputs();"
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" id="distance5" name="distance5"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000">
-                    </div>
-                </div>
-                <div class="col my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction5" name="direction5" type="radio"
-                          onclick="preserveInputs();" value="1">
-                        <label class="form-check-label" for="direction5">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction5" name="direction5" type="radio"
-                          onclick="preserveInputs();" value="-1">
-                        <label class="form-check-label" for="direction5">Down</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row gx-3 gy-1 justify-content-center" id="row6" style="display:flex;">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group6">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed6"
-                              name="speed6" onchange="getFormattedTimeStringFromInputs();"
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" id="distance6" name="distance6"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000">
-                    </div>
-                </div>
-                <div class="col my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction6" name="direction6" type="radio"
-                          onclick="preserveInputs();" value="1">
-                        <label class="form-check-label" for="direction6">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction6" name="direction6" type="radio"
-                          onclick="preserveInputs();" value="-1">
-                        <label class="form-check-label" for="direction6">Down</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row gx-3 gy-1 justify-content-center" id="row7" style="display:flex;">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group7">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed7"
-                              name="speed7" onchange="getFormattedTimeStringFromInputs();"
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" id="distance7" name="distance7"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000">
-                    </div>
-                </div>
-                <div class="col my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction7" name="direction7" type="radio"
-                          onclick="preserveInputs();" value="1">
-                        <label class="form-check-label" for="direction7">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction7" name="direction7" type="radio"
-                          onclick="preserveInputs();" value="-1">
-                        <label class="form-check-label" for="direction7">Down</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row gx-3 gy-1 justify-content-center" id="row8" style="display:flex;">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group8">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed8"
-                              name="speed8" onchange="getFormattedTimeStringFromInputs();"
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" id="distance8" name="distance8"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000">
-                    </div>
-                </div>
-                <div class="col my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction8" name="direction8" type="radio"
-                          onclick="preserveInputs();" value="1">
-                        <label class="form-check-label" for="direction8">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction8" name="direction8" type="radio"
-                          onclick="preserveInputs();" value="-1">
-                        <label class="form-check-label" for="direction8">Down</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row gx-3 gy-1 justify-content-center" id="row9" style="display:flex;">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group9">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" id="speed9"
-                              name="speed9" onchange="getFormattedTimeStringFromInputs();"
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" id="distance9" name="distance9"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000">
-                    </div>
-                </div>
-                <div class="col my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction9" name="direction9" type="radio"
-                          onclick="preserveInputs();" value="1">
-                        <label class="form-check-label" for="direction9">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction9" name="direction9" type="radio"
-                          onclick="preserveInputs();" value="-1">
-                        <label class="form-check-label" for="direction9">Down</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row gx-3 gy-1 justify-content-center" id="row10" style="display:none">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group10">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control"
-                              id="speed10" name="speed10" onchange="getFormattedTimeStringFromInputs();" disabled
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" id="distance10" name="distance10"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000" disabled>
-                    </div>
-                </div>
-                <div class="col my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" id="direction10" name="direction10" type="radio"
-                          onclick="preserveInputs();" value="1" disabled>
-                        <label class="form-check-label" for="direction10">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" id="direction10" name="direction10" type="radio"
-                          onclick="preserveInputs();" value="-1" disabled>
-                        <label class="form-check-label" for="direction10">Down</label>
-                    </div>
-                </div>
-            </div>
+        </div>
 
-            <div class="row gx-3 gy-1 justify-content-center" id="row11" style="display:none">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group12">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
-                              id="speed11" name="speed11" onchange="getFormattedTimeStringFromInputs();"
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
+        <div class="row gx-3 gy-1 justify-content-center" id="row3" style="display:flex">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
                     </div>
-                </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" disabled id="distance11" name="distance11"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000">
-                    </div>
-                </div>
-                <div class="col my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" disabled id="direction11" name="direction11"
-                          type="radio" onclick="preserveInputs();" value="1">
-                        <label class="form-check-label" for="direction11">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" disabled id="direction11" name="direction11" type="radio"
-                          onclick="preserveInputs();" value="-1">
-                        <label class="form-check-label" for="direction11">Down</label>
-                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control"
+                           id="speed3" name="speed3" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
                 </div>
             </div>
-            <div class="row gx-3 gy-1 justify-content-center" id="row12" style="display:none">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group13">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
-                              id="speed12" name="speed12" onchange="getFormattedTimeStringFromInputs();"
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
                     </div>
-                </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" disabled id="distance12" name="distance12"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000">
-                    </div>
-                </div>
-                <div class="col my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" disabled id="direction12" name="direction12"
-                          type="radio" onclick="preserveInputs();" value="1">
-                        <label class="form-check-label" for="direction12">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" disabled id="direction12" name="direction12" type="radio"
-                          onclick="preserveInputs();" value="-1">
-                        <label class="form-check-label" for="direction12">Down</label>
-                    </div>
+                    <input class="kekw myinput form-control input-sm" id="distance3" name="distance3"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
                 </div>
             </div>
-            <div class="row gx-3 gy-1 justify-content-center" id="row13" style="display:none">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group14">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
-                              id="speed13" name="speed13" onchange="getFormattedTimeStringFromInputs();"
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
-                    </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" id="direction_up3" name="direction_up3"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up3">Up</label>
                 </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" disabled id="distance13" name="distance13"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000">
-                    </div>
-                </div>
-                <div class="col my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" disabled id="direction13" name="direction13"
-                          type="radio" onclick="preserveInputs();" value="1">
-                        <label class="form-check-label" for="direction13">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" disabled id="direction13" name="direction13" type="radio"
-                          onclick="preserveInputs();" value="-1">
-                        <label class="form-check-label" for="direction13">Down</label>
-                    </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" id="direction_up3" name="direction_up3"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up3">Down</label>
                 </div>
             </div>
-            <div class="row gx-3 gy-1 justify-content-center" id="row14" style="display:none">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group15">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
-                              id="speed14" name="speed14" onchange="getFormattedTimeStringFromInputs();"
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" disabled id="distance14" name="distance14"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000">
-                    </div>
-                </div>
-                <div class="col my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" disabled id="direction14" name="direction14"
-                          type="radio" onclick="preserveInputs();" value="1">
-                        <label class="form-check-label" for="direction14">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" disabled id="direction14" name="direction14" type="radio"
-                          onclick="preserveInputs();" value="-1">
-                        <label class="form-check-label" for="direction14">Down</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row gx-3 gy-1 justify-content-center" id="row15" style="display:none">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group16">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
-                              id="speed15" name="speed15" onchange="getFormattedTimeStringFromInputs();"
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" disabled id="distance15" name="distance15"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000">
-                    </div>
-                </div>
-                <div class="col my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" disabled id="direction15" name="direction15"
-                          type="radio" onclick="preserveInputs();" value="1">
-                        <label class="form-check-label" for="direction15">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" disabled id="direction15" name="direction15" type="radio"
-                          onclick="preserveInputs();" value="-1">
-                        <label class="form-check-label" for="direction15">Down</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row gx-3 gy-1 justify-content-center" id="row16" style="display:none">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group17">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
-                              id="speed16" name="speed16" onchange="getFormattedTimeStringFromInputs();"
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" disabled id="distance16" name="distance16"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000">
-                    </div>
-                </div>
-                <div class="col my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" disabled id="direction16" name="direction16"
-                          type="radio" onclick="preserveInputs();" value="1">
-                        <label class="form-check-label" for="direction16">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" disabled id="direction16" name="direction16" type="radio"
-                          onclick="preserveInputs();" value="-1">
-                        <label class="form-check-label" for="direction16">Down</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row gx-3 gy-1 justify-content-center" id="row17" style="display:none">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group18">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
-                              id="speed17" name="speed17" onchange="getFormattedTimeStringFromInputs();"
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" disabled id="distance17" name="distance17"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000">
-                    </div>
-                </div>
-                <div class="col my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" disabled id="direction17" name="direction17"
-                          type="radio" onclick="preserveInputs();" value="1">
-                        <label class="form-check-label" for="direction17">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" disabled id="direction17" name="direction17" type="radio"
-                          onclick="preserveInputs();" value="-1">
-                        <label class="form-check-label" for="direction17">Down</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row gx-3 gy-1 justify-content-center" id="row18" style="display:none">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group19">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
-                              id="speed18" name="speed18" onchange="getFormattedTimeStringFromInputs();"
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" disabled id="distance18" name="distance18"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000">
-                    </div>
-                </div>
-                <div class="col my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" disabled id="direction18" name="direction18"
-                          type="radio" onclick="preserveInputs();" value="1">
-                        <label class="form-check-label" for="direction18">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" disabled id="direction18" name="direction18" type="radio"
-                          onclick="preserveInputs();" value="-1">
-                        <label class="form-check-label" for="direction18">Down</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row gx-3 gy-1 justify-content-center" id="row19" style="display:none">
-                <div class="col-sm">
-                    <div class="mydiv" id="input_group20">
-                        <div class="input-group input-group-sm mb-2">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Speed</span>
-                            </div>
-                            <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
-                              id="speed19" name="speed19" onchange="getFormattedTimeStringFromInputs();"
-                              onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" type="number"
-                              value="5000">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm">
-                    <div class="input-group input-group-sm mb-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Distance</span>
-                        </div>
-                        <input class="kekw myinput form-control input-sm" disabled id="distance19" name="distance19"
-                          onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
-                          placeholder="Attālums" type="number" value="1000">
-                    </div>
-                </div>
-                <div class="col my-auto">
-                    <div class="form-check-inline">
-                        <input checked class="kekw form-check-input" disabled id="direction19" name="direction19"
-                          type="radio" onclick="preserveInputs();" value="1">
-                        <label class="form-check-label" for="direction19">Up</label>
-                    </div>
-                    <div class="form-check-inline">
-                        <input class="kekw form-check-input" disabled id="direction19" name="direction19" type="radio"
-                          onclick="preserveInputs();" value="-1">
-                        <label class="form-check-label" for="direction19">Down</label>
-                    </div>
-                </div>
-            </div>
+        </div>
 
-            <button class="btn btn-success" id="submit" type="button" onclick="submitForm();">
-                Submit and Start
+        <div class="row gx-3 gy-1 justify-content-center" id="row4" style="display:flex">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
+                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control"
+                           id="speed4" name="speed4" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
+                    </div>
+                    <input class="kekw myinput form-control input-sm" id="distance4" name="distance4"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
+                </div>
+            </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" id="direction_up4" name="direction_up4"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up4">Up</label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" id="direction_up4" name="direction_up4"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up4">Down</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gx-3 gy-1 justify-content-center" id="row5" style="display:flex">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
+                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control"
+                           id="speed5" name="speed5" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
+                    </div>
+                    <input class="kekw myinput form-control input-sm" id="distance5" name="distance5"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
+                </div>
+            </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" id="direction_up5" name="direction_up5"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up5">Up</label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" id="direction_up5" name="direction_up5"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up5">Down</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gx-3 gy-1 justify-content-center" id="row6" style="display:flex">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
+                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control"
+                           id="speed6" name="speed6" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
+                    </div>
+                    <input class="kekw myinput form-control input-sm" id="distance6" name="distance6"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
+                </div>
+            </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" id="direction_up6" name="direction_up6"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up6">Up</label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" id="direction_up6" name="direction_up6"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up6">Down</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gx-3 gy-1 justify-content-center" id="row7" style="display:flex">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
+                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control"
+                           id="speed7" name="speed7" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
+                    </div>
+                    <input class="kekw myinput form-control input-sm" id="distance7" name="distance7"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
+                </div>
+            </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" id="direction_up7" name="direction_up7"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up7">Up</label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" id="direction_up7" name="direction_up7"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up7">Down</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gx-3 gy-1 justify-content-center" id="row8" style="display:flex">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
+                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control"
+                           id="speed8" name="speed8" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
+                    </div>
+                    <input class="kekw myinput form-control input-sm" id="distance8" name="distance8"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
+                </div>
+            </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" id="direction_up8" name="direction_up8"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up8">Up</label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" id="direction_up8" name="direction_up8"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up8">Down</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gx-3 gy-1 justify-content-center" id="row9" style="display:flex">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
+                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control"
+                           id="speed9" name="speed9" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
+                    </div>
+                    <input class="kekw myinput form-control input-sm" id="distance9" name="distance9"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
+                </div>
+            </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" id="direction_up9" name="direction_up9"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up9">Up</label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" id="direction_up9" name="direction_up9"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up9">Down</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gx-3 gy-1 justify-content-center" id="row10" style="display:flex">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
+                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control"
+                           id="speed10" name="speed10" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
+                    </div>
+                    <input class="kekw myinput form-control input-sm" id="distance10" name="distance10"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
+                </div>
+            </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" id="direction_up10" name="direction_up10"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up10">Up</label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" id="direction_up10" name="direction_up10"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up10">Down</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gx-3 gy-1 justify-content-center" id="row11" style="display:none">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
+                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
+                           id="speed11" name="speed11" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
+                    </div>
+                    <input class="kekw myinput form-control input-sm" disabled id="distance11" name="distance11"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
+                </div>
+            </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" disabled id="direction_up11" name="direction_up11"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up11">Up</label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" disabled id="direction_up11" name="direction_up11"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up11">Down</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gx-3 gy-1 justify-content-center" id="row12" style="display:none">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
+                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
+                           id="speed12" name="speed12" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
+                    </div>
+                    <input class="kekw myinput form-control input-sm" disabled id="distance12" name="distance12"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
+                </div>
+            </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" disabled id="direction_up12" name="direction_up12"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up12">Up</label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" disabled id="direction_up12" name="direction_up12"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up12">Down</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gx-3 gy-1 justify-content-center" id="row13" style="display:none">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
+                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
+                           id="speed13" name="speed13" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
+                    </div>
+                    <input class="kekw myinput form-control input-sm" disabled id="distance13" name="distance13"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
+                </div>
+            </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" disabled id="direction_up13" name="direction_up13"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up13">Up</label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" disabled id="direction_up13" name="direction_up13"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up13">Down</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gx-3 gy-1 justify-content-center" id="row14" style="display:none">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
+                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
+                           id="speed14" name="speed14" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
+                    </div>
+                    <input class="kekw myinput form-control input-sm" disabled id="distance14" name="distance14"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
+                </div>
+            </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" disabled id="direction_up14" name="direction_up14"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up14">Up</label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" disabled id="direction_up14" name="direction_up14"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up14">Down</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gx-3 gy-1 justify-content-center" id="row15" style="display:none">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
+                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
+                           id="speed15" name="speed15" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
+                    </div>
+                    <input class="kekw myinput form-control input-sm" disabled id="distance15" name="distance15"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
+                </div>
+            </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" disabled id="direction_up15" name="direction_up15"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up15">Up</label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" disabled id="direction_up15" name="direction_up15"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up15">Down</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gx-3 gy-1 justify-content-center" id="row16" style="display:none">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
+                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
+                           id="speed16" name="speed16" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
+                    </div>
+                    <input class="kekw myinput form-control input-sm" disabled id="distance16" name="distance16"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
+                </div>
+            </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" disabled id="direction_up16" name="direction_up16"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up16">Up</label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" disabled id="direction_up16" name="direction_up16"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up16">Down</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gx-3 gy-1 justify-content-center" id="row17" style="display:none">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
+                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
+                           id="speed17" name="speed17" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
+                    </div>
+                    <input class="kekw myinput form-control input-sm" disabled id="distance17" name="distance17"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
+                </div>
+            </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" disabled id="direction_up17" name="direction_up17"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up17">Up</label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" disabled id="direction_up17" name="direction_up17"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up17">Down</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gx-3 gy-1 justify-content-center" id="row18" style="display:none">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
+                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
+                           id="speed18" name="speed18" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
+                    </div>
+                    <input class="kekw myinput form-control input-sm" disabled id="distance18" name="distance18"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
+                </div>
+            </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" disabled id="direction_up18" name="direction_up18"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up18">Up</label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" disabled id="direction_up18" name="direction_up18"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up18">Down</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gx-3 gy-1 justify-content-center" id="row19" style="display:none">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
+                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
+                           id="speed19" name="speed19" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
+                    </div>
+                    <input class="kekw myinput form-control input-sm" disabled id="distance19" name="distance19"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
+                </div>
+            </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" disabled id="direction_up19" name="direction_up19"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up19">Up</label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" disabled id="direction_up19" name="direction_up19"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up19">Down</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row gx-3 gy-1 justify-content-center" id="row20" style="display:none">
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Speed</span>
+                    </div>
+                    <input aria-describedby="inputGroup-sizing-sm" class="kekw myinput form-control" disabled
+                           id="speed20" name="speed20" onchange="getFormattedTimeStringFromInputs();"
+                           onkeyup="getFormattedTimeStringFromInputs();" placeholder="Ātrums" required
+                           type="number" value="5000">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="input-group input-group-sm mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Distance</span>
+                    </div>
+                    <input class="kekw myinput form-control input-sm" disabled id="distance20" name="distance20"
+                           onchange="getFormattedTimeStringFromInputs();" onkeyup="getFormattedTimeStringFromInputs();"
+                           placeholder="Attālums" required type="number" value="1000">
+                </div>
+            </div>
+            <div class="col my-auto">
+                <div class="form-check-inline">
+                    <input checked class="kekw form-check-input" disabled id="direction_up20" name="direction_up20"
+                           onclick="preserveInputs();" required type="radio" value="1">
+                    <label class="form-check-label" for="direction_up20">Up</label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="kekw form-check-input" disabled id="direction_up20" name="direction_up20"
+                           onclick="preserveInputs();"
+                           type="radio" value="-1">
+                    <label class="form-check-label" for="direction_up20">Down</label>
+                </div>
+            </div>
+        </div>
+
+
+        <button class="btn btn-success" id="submit" onclick="submitForm();" type="button">
+            Submit and Start
+        </button>
+        <div aria-label="Toolbar with button groups" class="btn-toolbar" role="toolbar" style="display: inline">
+            <button class="btn btn-primary" id="go_to_top" name="foo" onclick="sendToTopRequest()" type="button"
+                    value="go_to_top">Go to the
+                top
             </button>
-            <div aria-label="Toolbar with button groups" class="btn-toolbar" role="toolbar" style="display: inline">
-                <button class="btn btn-primary" id="go_to_top" name="foo" onclick="sendToTopRequest()" type="button"
-                  value="go_to_top">Go to the
-                    top
-                </button>
-                <button class="btn btn-warning" disabled id="pause" name="pause" onclick="sendPauseRequest()"
-                  type="button" value="pause">Pause
-                </button>
-                <button class="btn btn-danger" disabled id="stop" name="stop" onclick="sendStopRequest()" type="button"
-                  value="stop">Stop
-                </button>
-            </div>
+            <button class="btn btn-warning" disabled id="pause" name="pause" onclick="sendPauseRequest()"
+                    type="button" value="pause">Pause
+            </button>
+            <button class="btn btn-danger" disabled id="stop" name="stop" onclick="sendStopRequest()" type="button"
+                    value="stop">Stop
+            </button>
+        </div>
 
 
-        </form>
-        <button onclick="fillInputs();">FILL inputs</button>
-        <button onclick="recieveFromESP8266();">Recieve data</button>
+    </form>
+    <button onclick="fillInputs();">FILL inputs</button>
+    <button onclick="recieveFromESP8266();">Recieve data</button>
 
-        <script crossorigin="anonymous"
-          integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-          src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="js/helpers.js" type="text/javascript"></script>
-        <script src="js/my_Js.js" type="text/javascript"></script>
+    <script crossorigin="anonymous"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/helpers.js" type="text/javascript"></script>
+    <script src="js/my_Js.js" type="text/javascript"></script>
 </body>
 
 </html>

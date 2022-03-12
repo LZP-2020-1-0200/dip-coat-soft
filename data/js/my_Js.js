@@ -48,7 +48,7 @@ documentReady(() => {
         }
         is_working = true;
         updateButtonStates();
-        changeInnerHTMLbyID("ajaxtest", "Calculated time: " + secondsToTimeString(time1));
+        changeInnerHTMLbyID("calculated_time", "Calculated time: " + secondsToTimeString(time1));
         console.log(time_needed);
 
     }).then(() => {
@@ -98,7 +98,7 @@ function getFormattedTimeStringFromInputs() {
     let seconds = calculateSecondsNeededFromInputs();
     let time_string = secondsToTimeString(seconds);
     preserveInputs();
-    changeInnerHTMLbyID("ajaxtest", "Calculated time: " + time_string);
+    changeInnerHTMLbyID("calculated_time", "Calculated time: " + time_string);
 }
 
 function hideRow() {
@@ -195,7 +195,7 @@ async function updateButtonStates() {
 
     document.getElementById('percentage').style.display = is_working ? "block" : "none";
     document.getElementById('remaining_time').style.display = is_working ? "inline" : "none";
-    document.getElementById('hetyo').style.display = is_working ? "block" : "none";
+    document.getElementById('remaining_time_wrapper').style.display = is_working ? "block" : "none";
     let i = 0;
     const all_rows = document.getElementsByClassName("row gx-3 gy-1 justify-content-center");
 
@@ -276,7 +276,7 @@ function fillInputs() {
 }
 
 function submitForm() {
-    let fd = new FormData(document.getElementById('myform'));
+    let fd = new FormData(document.getElementById('stepper_form'));
     let data = convertInputsToJSON(fd);
 
     fetch("submit",
@@ -294,6 +294,7 @@ function submitForm() {
             updateButtonStates();
             alert(response);
         }));
+
 
 }
 
