@@ -10,6 +10,9 @@ let is_working = false;
 let is_paused = false;
 let startTime;
 
+function objectEmpty(object) {
+    return Object.keys(object).length === 0 && object.constructor === Object;
+}
 
 documentReady(() => {
     sessionStorage.inputArray && restoreInputsAfterRefresh();
@@ -22,34 +25,37 @@ documentReady(() => {
             is_working = false;
             return;
         }
-
-        console.log(response);
-        let i = 0;
-        const all_rows = document.getElementsByClassName("row gx-3 gy-1 justify-content-center");
-        let time1 = 0;
-
-        for (const row of Object.keys(response)) {
-            const row_inputs = all_rows[i].getElementsByClassName("kekw");
-            row_inputs[0].value = response[row]["speed"];
-            row_inputs[1].value = response[row]["distance"];
-            response[row]["direction"] == 1 ? row_inputs[2].checked = true : row_inputs[3].checked = true;
-
-            response[row]["hidden"] === 1 ? all_rows[i].style.display = "none" : all_rows[i].style.display = "";
-
-            if (response[row]["hidden"] !== 1)
-                time_needed += (response[row]["distance"] * 1000) / response[row]["speed"];
-
-            console.log(response[row]["hidden"] === 1);
-            row_inputs[0].disabled = response[row]["hidden"] === 1;
-            row_inputs[1].disabled = response[row]["hidden"] === 1;
-            row_inputs[2].disabled = response[row]["hidden"] === 1;
-            row_inputs[3].disabled = response[row]["hidden"] === 1;
-            i++;
-        }
         is_working = true;
-        updateButtonStates();
-        changeInnerHTMLbyID("calculated_time", "Calculated time: " + secondsToTimeString(time1));
-        console.log(time_needed);
+        restoreInputsFromServer(response);
+
+
+        // console.log(response);
+        // let i = 0;
+        // const all_rows = document.getElementsByClassName("row gx-3 gy-1 justify-content-center");
+
+
+        // for (const row of Object.keys(response)) {
+        //     const row_inputs = all_rows[i].getElementsByClassName("kekw");
+        //     row_inputs[0].value = response[row]["speed"];
+        //     row_inputs[1].value = response[row]["distance"];
+        //     response[row]["direction"] == 1 ? row_inputs[2].checked = true : row_inputs[3].checked = true;
+
+        //     response[row]["hidden"] === 1 ? all_rows[i].style.display = "none" : all_rows[i].style.display = "";
+
+        //     if (response[row]["hidden"] !== 1)
+        //         time_needed += (response[row]["distance"] * 1000) / response[row]["speed"];
+
+        //     console.log(response[row]["hidden"] === 1);
+        //     row_inputs[0].disabled = response[row]["hidden"] === 1;
+        //     row_inputs[1].disabled = response[row]["hidden"] === 1;
+        //     row_inputs[2].disabled = response[row]["hidden"] === 1;
+        //     row_inputs[3].disabled = response[row]["hidden"] === 1;
+        //     i++;
+        // }
+        // is_working = true;
+        // updateButtonStates();
+        // changeInnerHTMLbyID("calculated_time", "Calculated time: " + secondsToTimeString(time_needed));
+        // console.log(time_needed);
 
     }).then(() => {
         fetch("get_passed_time", { method: "POST", }).then(response => response.text()).then(response => {
@@ -60,6 +66,9 @@ documentReady(() => {
             startTime = performance.now();
             setInterval(updateProgressBar, frames_per_second);
         });
+    }).then(() => {
+        fetch("send_saved_programms", { method: 'POST' }).then(response => response.json()).then(response => console.log(response));
+        fillModalWithProgramms();
     });
 
 
@@ -192,6 +201,8 @@ async function updateButtonStates() {
     document.getElementById('hide_row').disabled = is_working;
     document.getElementById('go_to_top').disabled = is_working;
     document.getElementById('submit').disabled = is_working;
+    document.getElementById('save_modal_btn').disabled = is_working;
+    document.getElementById('send_modal_btn').disabled = is_working;
 
     document.getElementById('percentage').style.display = is_working ? "block" : "none";
     document.getElementById('remaining_time').style.display = is_working ? "inline" : "none";
@@ -262,22 +273,9 @@ function restoreInputsAfterRefresh() {
     getFormattedTimeStringFromInputs();
 }
 
-function fillInputs() {
-    const all_rows = document.getElementsByClassName("row gx-3 gy-1 justify-content-center");
-    Array.from(all_rows).forEach(row => {
-        const all_inputs = row.getElementsByTagName("input");
-        all_inputs[0].value = randomNumber(5000, 20000);
-        all_inputs[1].value = randomNumber(100, 500);
-
-        randomNumber(0, 1) === 0 ? all_inputs[2].checked = true : all_inputs[3].checked = true;
-
-    });
-    getFormattedTimeStringFromInputs();
-}
-
 function submitForm() {
-    let fd = new FormData(document.getElementById('stepper_form'));
-    let data = convertInputsToJSON(fd);
+    let data = convertInputsToJSON();
+    console.log(data);
 
     fetch("submit",
         {
@@ -292,7 +290,7 @@ function submitForm() {
             startTime = performance.now();
             changeInnerHTMLbyID("remaining_time", secondsToTimeString(time_needed || calculateSecondsNeededFromInputs()));
             updateButtonStates();
-            alert(response);
+            
         }));
 
 
@@ -302,4 +300,126 @@ async function recieveFromESP8266() {
     let response = await fetch("get_programms", { method: "POST", });
     let answer = await response.text();
     console.log(answer);
+}
+
+async function saveForm(filename) {
+    // let fd = new FormData(document.getElementById('stepper_form'));
+    let data = convertInputsToJSON(filename + ".txt");
+
+    response = await fetch("save_programm",
+        {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, // this line is important, if this content-type is not set it wont work
+            body: data,
+        });
+
+    if (!response.ok) {
+        changeInnerHTMLbyID("save_response_text", "Something went wrong");
+        document.getElementById("save_response_text").style.display = "block";
+        return;
+    }
+
+    response_text = await response.text();
+    changeInnerHTMLbyID("save_response_text", response_text);
+    document.getElementById("save_response_text").classList.toggle('hide');
+    setTimeout(() => document.getElementById("save_response_text").classList.toggle('hide'),2500);
+
+    // document.getElementById("save_response_text").style.display = "block";
+    fillModalWithProgramms();
+}
+
+
+async function sendFormESP8266(filename) {
+
+    response = await fetch("send_saved", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: filename + ".txt",
+    });
+    recieved_json = await response.json();
+    restoreInputsFromServer(recieved_json);
+
+}
+
+function restoreInputsFromServer(object) {
+    console.log(object);
+    let i = 0;
+    const all_rows = document.getElementsByClassName("row gx-3 gy-1 justify-content-center");
+    time_needed = 0;
+
+    for (const row of Object.keys(object)) {
+        const row_inputs = all_rows[i].getElementsByClassName("kekw");
+        row_inputs[0].value = object[row]["speed"];
+        row_inputs[1].value = object[row]["distance"];
+        object[row]["direction"] == 1 ? row_inputs[2].checked = true : row_inputs[3].checked = true;
+
+        object[row]["hidden"] === 1 ? all_rows[i].style.display = "none" : all_rows[i].style.display = "";
+
+        if (object[row]["hidden"] !== 1)
+            time_needed += (object[row]["distance"] * 1000) / object[row]["speed"];
+
+        row_inputs[0].disabled = object[row]["hidden"] === 1;
+        row_inputs[1].disabled = object[row]["hidden"] === 1;
+        row_inputs[2].disabled = object[row]["hidden"] === 1;
+        row_inputs[3].disabled = object[row]["hidden"] === 1;
+        i++;
+    }
+
+    updateButtonStates();
+    changeInnerHTMLbyID("calculated_time", "Calculated time: " + secondsToTimeString(time_needed));
+    console.log(time_needed);
+}
+
+async function fillModalWithProgramms() {
+    let repsone = await fetch("/send_saved_programms", { method: 'POST' });
+    let programms = await repsone.json();
+
+    let full_text = '';
+
+    if (!programms){
+        changeInnerHTMLbyID("send_body_modal", '');
+        return
+    }
+   
+    programms["names"].forEach(programm_name => {
+
+        let programm_name_without_extension = programm_name.slice(0, -4);
+        console.log(programm_name_without_extension);
+        let text = `
+ 
+        <div class="row mt-1 justify-content-between align-items-center">
+        <div class="col-4">
+            ${programm_name_without_extension}
+        </div>
+        <div class="col-4">
+                <button class="btn btn-primary me-1" onclick="sendFormESP8266('${programm_name_without_extension}');"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+              </svg></button>
+                <button class="btn btn-danger ms-1" onclick="deleteProgramm('${programm_name}');"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+              </svg></button>
+        </div>
+    </div>
+                    `;
+        full_text += text;
+
+    });
+
+    changeInnerHTMLbyID("send_body_modal", full_text);
+}
+
+async function deleteProgramm(programm_to_delete) {
+    let promise = await fetch("delete_programm", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: programm_to_delete,
+    });
+
+    let response = await promise.text();
+    alert(response);
+    fillModalWithProgramms();
+
+
 }

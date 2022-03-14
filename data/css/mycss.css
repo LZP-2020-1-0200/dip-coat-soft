@@ -14,41 +14,12 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
-/* .myinput{
-
-    width: calc(100% - 170px) !important;
-} */
-
-
-.myswitch {
-    float: right !important;
-    margin-top: 15px;
+#save_response_text{
+    opacity: 1;
+    transition: opacity 0.5s linear;
 }
 
-
-/* @media (max-width: 1200px) {
-    .myinput{
-
-        width: calc(100% - 180px) !important;
-    }
-    
+#save_response_text.hide {
+    opacity: 0;
 }
-
-@media (max-width: 800) {
-    .myinput {
-        width: calc(100% - 140px) !important;
-    }
-}
-
-@media (max-width: 600px) {
-    .myinput {
-        width: calc(100% - 140px) !important;
-    }
-}
-
-@media (max-width: 300px) {
-    .myinput {
-        width: calc(100% - 100px) !important;
-    }
-} */
 

@@ -15,8 +15,12 @@ function StringToSeconds(string) {
     return (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
 }
 
-function convertInputsToJSON(){
+function convertInputsToJSON(name = ""){
     let data_to_send = {};
+
+    if (name !== "")
+        data_to_send["name"] = name;
+    
     const all_rows = document.getElementsByClassName("row gx-3 gy-1 justify-content-center");
 
     Array.from(all_rows).forEach(row => {

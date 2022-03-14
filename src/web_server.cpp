@@ -107,10 +107,132 @@ void initialize_server()
 
                   print_input();
                   submitted = true;
-                  request->send(200, "text/plain", "success"); });
+                  request->send(200, "text/plain", "Submited sucessfuly"); });
 
-    server.on("/get_programms", HTTP_POST, [](AsyncWebServerRequest *request)
-              { request->send(LittleFS, "/programms/test.txt", "text/plain"); });
+    server.on("/send_saved_programms", HTTP_POST, [](AsyncWebServerRequest *request)
+              {
+                  Dir dir = LittleFS.openDir("/data/programms/");
+                  StaticJsonDocument<1024> programm_json;
+                  int i = 0;
+                  while (dir.next())
+                  {
+                      if (dir.fileSize())
+                      {
+                          programm_json["names"][i] = dir.fileName();
+                          i++;
+                      }
+                  }
+                  AsyncResponseStream *response = request->beginResponseStream("application/json");
+                  serializeJson(programm_json, *response);
+                  request->send(response); });
+
+    server.on("/delete_programm", HTTP_POST, [](AsyncWebServerRequest *request)
+              {
+                  AsyncWebParameter *p = request->getParam(0);
+                  String filename_to_delete = "/data/programms/" + p->value();
+
+                  if (LittleFS.exists(filename_to_delete))
+                  {
+                      LittleFS.remove(filename_to_delete);
+                      request->send(200, "text/plain", "Removed successfully");
+                  }
+
+                else{
+                     request->send(400, "text/plain", "Removed successfully");
+                }
+
+
+              });
+
+    server.on("/save_programm", HTTP_POST, [](AsyncWebServerRequest *request)
+              {
+                  DynamicJsonDocument recieving_doc(2048);
+                  AsyncWebParameter *p = request->getParam(0);
+                  DeserializationError err = deserializeJson(recieving_doc, p->value());
+
+                  if (err)
+                  {
+                      Serial.print(F("deserializeJson() returned "));
+                      Serial.println(err.f_str());
+                      request->send(500, "text/plain", "Could not Deserialize JSON");
+                      
+                  }
+
+                    String filename = "/data/programms/" + recieving_doc["name"].as<String>();
+                    Serial.println(filename);
+
+
+                  File file = LittleFS.open(filename, "w");
+                  uint8_t i = 0;
+                  for (auto row : recieving_doc.as<JsonObject>())
+                  {
+                      if (i == 0){
+                          i++;
+                          continue;
+                      }
+                      JsonObject values = row.value().as<JsonObject>();
+                      file.println(values["hidden"].as<int>());
+                      file.println(values["speed"].as<int>());
+                      file.println(values["distance"].as<int>());
+                      file.println(values["direction"].as<int>());
+                  }
+
+                  file.close();
+                  request->send(200, "text/plain", "Saved successfully"); });
+
+    server.on("/send_saved", HTTP_POST, [](AsyncWebServerRequest *request)
+              {
+                  AsyncWebParameter *p = request->getParam(0);
+                  Serial.println(p->value());
+                  String filename = "/data/programms/" + p->value();
+
+                  File f = LittleFS.open(filename, "r");
+                  DynamicJsonDocument sending_doc(2048);
+                  Serial.println("inside /send_saved");
+
+                  int i = 0;
+                  int row_number = 0;
+                  String current_row_nr = "";
+                  while (f.available())
+                  {
+                      String line = f.readStringUntil('\n');
+
+                      switch (i)
+                      {
+
+                      case 0:
+                          Serial.println("case0");
+                          current_row_nr = "row" + String(row_number++);
+                          Serial.println(current_row_nr);
+                          sending_doc[current_row_nr]["hidden"] = line.toInt();
+                          break;
+
+                      case 1:
+                          sending_doc[current_row_nr]["speed"] = line.toInt();
+                          Serial.println("case1");
+
+                          break;
+
+                      case 2:
+                          Serial.println("case2");
+                          sending_doc[current_row_nr]["distance"] = line.toInt();
+
+                          break;
+
+                      case 3:
+                          Serial.println("case3");
+                          sending_doc[current_row_nr]["direction"] = line.toInt();
+                          i = -1;
+                          break;
+                      };
+                      i++;
+                  };
+
+                  f.close();
+
+                  AsyncResponseStream *response = request->beginResponseStream("application/json");
+                  serializeJson(sending_doc, *response);
+                  request->send(response); });
 
     server.begin();
 }
