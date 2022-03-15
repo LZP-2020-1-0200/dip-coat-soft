@@ -31,11 +31,15 @@ documentReady(() => {
 
     }).then(() => {
         fetch("check_if_paused", { method: 'POST' }).then(response => response.text()).then(response => {
-            console.log("response is " + response);
+            // console.log("response is " + response);
             console.log("Is paused:", response === "true");
             is_paused = response === "true";
             changeInnerHTMLbyID("pause", is_paused ? "Unpause" : "Pause");
-            document.getElementById('stop').disabled = is_paused;
+            
+            if (is_paused) {
+                document.getElementById('pause').disabled = false;
+                document.getElementById('stop').disabled = true;
+            }
 
         }).then(() => {
             fetch("get_passed_time", { method: "POST", }).then(response => response.text()).then(response => {
