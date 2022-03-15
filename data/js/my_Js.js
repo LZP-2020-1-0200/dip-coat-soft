@@ -29,49 +29,32 @@ documentReady(() => {
         restoreInputsFromServer(response);
 
 
-        // console.log(response);
-        // let i = 0;
-        // const all_rows = document.getElementsByClassName("row gx-3 gy-1 justify-content-center");
-
-
-        // for (const row of Object.keys(response)) {
-        //     const row_inputs = all_rows[i].getElementsByClassName("kekw");
-        //     row_inputs[0].value = response[row]["speed"];
-        //     row_inputs[1].value = response[row]["distance"];
-        //     response[row]["direction"] == 1 ? row_inputs[2].checked = true : row_inputs[3].checked = true;
-
-        //     response[row]["hidden"] === 1 ? all_rows[i].style.display = "none" : all_rows[i].style.display = "";
-
-        //     if (response[row]["hidden"] !== 1)
-        //         time_needed += (response[row]["distance"] * 1000) / response[row]["speed"];
-
-        //     console.log(response[row]["hidden"] === 1);
-        //     row_inputs[0].disabled = response[row]["hidden"] === 1;
-        //     row_inputs[1].disabled = response[row]["hidden"] === 1;
-        //     row_inputs[2].disabled = response[row]["hidden"] === 1;
-        //     row_inputs[3].disabled = response[row]["hidden"] === 1;
-        //     i++;
-        // }
-        // is_working = true;
-        // updateButtonStates();
-        // changeInnerHTMLbyID("calculated_time", "Calculated time: " + secondsToTimeString(time_needed));
-        // console.log(time_needed);
-
     }).then(() => {
-        fetch("get_passed_time", { method: "POST", }).then(response => response.text()).then(response => {
-            let passed_time = parseInt(response) / 1e3;
-            progress_percentage = (passed_time / time_needed * 100) || 0;
-            console.log("time needed : ", time_needed);
-            console.log("Percentage from response ", progress_percentage);
-            startTime = performance.now();
-            setInterval(updateProgressBar, frames_per_second);
+        fetch("check_if_paused", { method: 'POST' }).then(response => response.text()).then(response => {
+            console.log("response is " + response);
+            console.log("Is paused:", response === "true");
+            is_paused = response === "true";
+            changeInnerHTMLbyID("pause", is_paused ? "Unpause" : "Pause");
+            document.getElementById('stop').disabled = is_paused;
+
+        }).then(() => {
+            fetch("get_passed_time", { method: "POST", }).then(response => response.text()).then(response => {
+                let passed_time = parseInt(response) / 1e3;
+                progress_percentage = (passed_time / time_needed * 100) || 0;
+                console.log("time needed : ", time_needed);
+                console.log("Percentage from response ", progress_percentage);
+                startTime = performance.now();
+                let remaining_time_string = getRemainingTime(progress_percentage, time_needed);
+                updateProgressBarValues(progress_percentage);
+                changeInnerHTMLbyID('remaining_time', remaining_time_string);
+                setInterval(updateProgressBar, frames_per_second);
+            });
         });
+
     }).then(() => {
         fetch("send_saved_programms", { method: 'POST' }).then(response => response.json()).then(response => console.log(response));
         fillModalWithProgramms();
     });
-
-
 });
 
 let sendToTopRequest = () => fetch("go_to_top", { method: 'POST', }).then(response => response.text()).then(response => alert(response));
@@ -290,7 +273,7 @@ function submitForm() {
             startTime = performance.now();
             changeInnerHTMLbyID("remaining_time", secondsToTimeString(time_needed || calculateSecondsNeededFromInputs()));
             updateButtonStates();
-            
+
         }));
 
 
@@ -322,7 +305,7 @@ async function saveForm(filename) {
     response_text = await response.text();
     changeInnerHTMLbyID("save_response_text", response_text);
     document.getElementById("save_response_text").classList.toggle('hide');
-    setTimeout(() => document.getElementById("save_response_text").classList.toggle('hide'),2500);
+    setTimeout(() => document.getElementById("save_response_text").classList.toggle('hide'), 2500);
 
     // document.getElementById("save_response_text").style.display = "block";
     fillModalWithProgramms();
@@ -376,11 +359,11 @@ async function fillModalWithProgramms() {
 
     let full_text = '';
 
-    if (!programms){
+    if (!programms) {
         changeInnerHTMLbyID("send_body_modal", '');
-        return
+        return;
     }
-   
+
     programms["names"].forEach(programm_name => {
 
         let programm_name_without_extension = programm_name.slice(0, -4);

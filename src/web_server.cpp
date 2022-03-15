@@ -58,6 +58,9 @@ void initialize_server()
                   stopped = true;
                   request->send(200, "text/plain", "Stopped"); });
 
+    server.on("/check_if_paused", HTTP_POST, [](AsyncWebServerRequest *request)
+              { request->send(200, "text/plain", paused ? "true" : "false"); });
+
     server.on("/get_passed_time", HTTP_POST, [](AsyncWebServerRequest *request)
               { request->send(200, "text/plain", String(total_passed_time)); });
 
@@ -137,12 +140,10 @@ void initialize_server()
                       request->send(200, "text/plain", "Removed successfully");
                   }
 
-                else{
-                     request->send(400, "text/plain", "Removed successfully");
-                }
-
-
-              });
+                  else
+                  {
+                      request->send(400, "text/plain", "Removed successfully");
+                  } });
 
     server.on("/save_programm", HTTP_POST, [](AsyncWebServerRequest *request)
               {
