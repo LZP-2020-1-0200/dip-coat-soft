@@ -68,7 +68,7 @@ void initialize_server()
               {
                   if (inputs[0].speed)
                   {
-                      Serial.println("Sent normal JSON");
+                    //   Serial.println("Sent normal JSON");
                       AsyncResponseStream *response = request->beginResponseStream("application/json");
                       serializeJson(doc, *response);
                       request->send(response);
@@ -76,7 +76,7 @@ void initialize_server()
 
                   else
                   {
-                      Serial.println("Sent empty JSON");
+                    //   Serial.println("Sent empty JSON");
                       request->send(200, "application/json", "{}");
                   } });
 
