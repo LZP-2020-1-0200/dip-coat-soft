@@ -1,4 +1,5 @@
 #include "stepper.h"
+#include "web_server.h"
 
 const uint32_t DISTANCE_NM_PER_ROTATION = 326000;
 static const uint8_t Q1[] = {LOW, HIGH, HIGH, LOW};
@@ -24,23 +25,35 @@ void make_step(int phase)
   digitalWrite(STEPPER_LINE4, Q4[phase]);
 }
 
-void go_to_top_()
+// void go_to_top_()
+// {
+//   Serial.println("Going top");
+//   uint16_t position = 0;
+//   unsigned long previousMillis = 0;
+//   int ledstate = LOW;
+//   Serial.println(digitalRead(REACHED_TOP_LINE));
+//   while (!digitalRead(REACHED_TOP_LINE))
+//   {
+//     unsigned long currentMillis = millis();
+//     if (currentMillis - previousMillis >= 100)
+//     {
+//       previousMillis = currentMillis;
+//       ledstate = ledstate == HIGH ? LOW : HIGH;
+//       digitalWrite(LEDPIN, ledstate);
+//       make_step(position++ & 0x3);
+//       Serial.println(position);
+//     }
+//   }
+// }
+
+bool go_up_(unsigned long currentMillis, unsigned long *previousMillis, uint16_t *position)
 {
-  Serial.println("Going top");
-  uint16_t position = 0;
-  unsigned long previousMillis = 0;
-  int ledstate = LOW;
-  Serial.println(digitalRead(REACHED_TOP_LINE));
-  while (!digitalRead(REACHED_TOP_LINE))
+  if (currentMillis - *previousMillis >= 25)
   {
-    unsigned long currentMillis = millis();
-    if (currentMillis - previousMillis >= 100)
-    {
-      previousMillis = currentMillis;
-      ledstate = ledstate == HIGH ? LOW : HIGH;
-      digitalWrite(LEDPIN, ledstate);
-      make_step(position++ & 0x3);
-      Serial.println(position);
-    }
+    int ledstate = (*position) % 2 == 0 ? HIGH : LOW;
+    digitalWrite(LEDPIN, ledstate);
+    make_step((*position)++ & 0x3);
+    *previousMillis = currentMillis;
   }
+  return digitalRead(REACHED_TOP_LINE);
 }

@@ -1,7 +1,6 @@
 #include "internet.h"
 #include "web_server.h"
 #include "stepper.h"
-#include "programms.h"
 
 unsigned long previousMillis = 0;
 
@@ -9,6 +8,7 @@ uint32_t passed_time = 0;
 uint32_t total_passed_time = 0;
 uint16_t position = 0;
 uint8_t ledstate = LOW;
+uint8_t currentInputNr = 0;
 
 void setup()
 {
@@ -46,68 +46,207 @@ void setup()
 
 void loop()
 {
-  if (!submitted && !go_to_top)
+  const unsigned long currentMillis = millis();
+
+  // while paused don't go beyond those lines
+  if (paused)
   {
+    previousMillis = 0;
     return;
   }
 
-  if (go_to_top)
+  // if stopped reset all variables and clears inputs
+  if (stopped)
   {
-    go_to_top_();
-    go_to_top = !go_to_top;
-    return;
+    stopped = false;
+    submitted = false;
+    total_passed_time = 0;
+    passed_time = 0;
+    currentInputNr = 0;
+    previousMillis = 0;
+    clear_inputs();
   }
-  
-  // itereate for every input recieved
-  for (input x : inputs)
+
+  // if submited in browser
+  if (submitted)
   {
-    // if speed is zero, then all valid inputs are executed and loop ends
-    if (x.hidden == 1)
+    previousMillis = previousMillis ? previousMillis : millis();
+    // if current input is hidden that means that programm ended
+    if (inputs[currentInputNr].hidden == 1)
     {
-      break;
+      // Serial.println(total_passed_time);
+      stopped = true;
+      return;
     }
 
-    passed_time = 0;
-    previousMillis = 0;
-
-    while (passed_time <= x.milli_seconds)
+    // if interval is bigger than current input interval
+    if (currentMillis - previousMillis >= inputs[currentInputNr].interval)
     {
+      // Serial.println(inputs[currentInputNr].milli_seconds - (currentMillis - previousMillis));
 
-      if (paused)
-      {
-        delay(1);
-        previousMillis = 0;
-        continue;
-      }
-
-      if (stopped)
-      {
-        stopped = !stopped;
-        submitted = false;
-        total_passed_time = 0;
-        return;
-      }
-
-      unsigned long currentMillis = millis();
-      if (currentMillis - previousMillis < x.interval)
-      {
-        delay(1);
-        continue;
-      }
-
-      // Skip first previous millis
-      passed_time += previousMillis ? (currentMillis - previousMillis) : 0;
-      total_passed_time += previousMillis ? (currentMillis - previousMillis) : 0;
+      // Current input sum of time
+      passed_time += currentMillis - previousMillis;
+      // Total programm sum of time
+      total_passed_time += currentMillis - previousMillis;
 
       previousMillis = currentMillis;
       ledstate = ledstate == HIGH ? LOW : HIGH;
-      digitalWrite(LEDPIN,ledstate);
-
-      position += x.direction;
+      digitalWrite(LEDPIN, ledstate);
+      position += inputs[currentInputNr].direction;
       make_step(position & 0x3);
+
+      // If current input sum of time is bigger than calculated continue to the next one
+      if (passed_time >= inputs[currentInputNr].milli_seconds)
+      {
+        passed_time = 0;
+        currentInputNr++;
+        previousMillis = 0;
+      }
     }
   }
-  submitted = false;
-  total_passed_time = 0;
-  clear_inputs();
+
+  // if go to top pressed move up until reached top
+  if (go_to_top)
+  {
+    go_to_top = go_up_(currentMillis, &previousMillis, &position);
+  }
 }
+// ------------------------------------------------------------------------------------------------
+
+//   if (!submitted && !go_to_top)
+//   {
+//     return;
+//   }
+
+//   if (go_to_top)
+//   {
+//     go_to_top_();
+//     go_to_top = !go_to_top;
+//     return;
+//   }
+
+//   // itereate for every input recieved
+//   for (input x : inputs)
+//   {
+//     // if speed is zero, then all valid inputs are executed and loop ends
+//     if (x.hidden == 1)
+//     {
+//       break;
+//     }
+
+//     passed_time = 0;
+//     previousMillis = 0;
+
+//     while (passed_time <= x.milli_seconds)
+//     {
+
+//       if (paused)
+//       {
+//         delay(1);
+//         previousMillis = 0;
+//         continue;
+//       }
+
+//       if (stopped)
+//       {
+//         stopped = !stopped;
+//         submitted = false;
+//         total_passed_time = 0;
+//         return;
+//       }
+
+//       unsigned long currentMillis = millis();
+//       if (currentMillis - previousMillis < x.interval)
+//       {
+//         delay(1);
+//         continue;
+//       }
+
+//       Serial.println(currentMillis - previousMillis);
+//       // Skip first previous millis
+//       passed_time += previousMillis ? (currentMillis - previousMillis) : 0;
+//       total_passed_time += previousMillis ? (currentMillis - previousMillis) : 0;
+
+//       previousMillis = currentMillis;
+//       ledstate = ledstate == HIGH ? LOW : HIGH;
+//       digitalWrite(LEDPIN,ledstate);
+
+//       position += x.direction;
+//       make_step(position & 0x3);
+//     }
+//   }
+//   submitted = false;
+//   total_passed_time = 0;
+//   clear_inputs();
+// }
+
+// void loop()
+// {
+//   if (!submitted && !go_to_top)
+//   {
+//     return;
+//   }
+
+//   if (go_to_top)
+//   {
+//     go_to_top_();
+//     go_to_top = !go_to_top;
+//     return;
+//   }
+
+//   // itereate for every input recieved
+//   for (input x : inputs)
+//   {
+//     // if speed is zero, then all valid inputs are executed and loop ends
+//     if (x.hidden == 1)
+//     {
+//       break;
+//     }
+
+//     passed_time = 0;
+//     previousMillis = 0;
+
+//     while (passed_time <= x.milli_seconds)
+//     {
+
+//       if (paused)
+//       {
+//         delay(1);
+//         previousMillis = 0;
+//         continue;
+//       }
+
+//       if (stopped)
+//       {
+//         stopped = !stopped;
+//         submitted = false;
+//         total_passed_time = 0;
+//         return;
+//       }
+
+//       unsigned long currentMillis = millis();
+//       if (currentMillis - previousMillis < x.interval)
+//       {
+//         delay(1);
+//         continue;
+//       }
+
+//       // Serial.println(currentMillis - previousMillis);
+//       // Skip first previous millis
+//       passed_time += previousMillis ? (currentMillis - previousMillis) : 0;
+//       total_passed_time += previousMillis ? (currentMillis - previousMillis) : 0;
+
+//       previousMillis = currentMillis;
+//       ledstate = ledstate == HIGH ? LOW : HIGH;
+//       digitalWrite(LEDPIN, ledstate);
+
+//       position += x.direction;
+//       make_step(position & 0x3);
+//     }
+//       Serial.println(passed_time);
+//   }
+
+//   submitted = false;
+//   total_passed_time = 0;
+//   clear_inputs();
+// }
