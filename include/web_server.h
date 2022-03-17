@@ -5,7 +5,8 @@
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncTCP.h>
 
-typedef struct {
+typedef struct
+{
     uint8_t hidden;
     uint32_t speed;
     uint32_t distance;
@@ -28,5 +29,6 @@ extern bool paused;
 extern bool stopped;
 extern bool go_to_top;
 extern uint32_t total_passed_time;
+extern bool reached_top;
+extern bool reached_bottom;
 #endif // !WEB_SERVER_H
-

@@ -8,6 +8,8 @@
 #define STEPPER_LINE4 14
 #define REACHED_TOP_LINE 5
 #define REACHED_BOTTOM_LINE 4
+#define UP_LED 16
+#define DOWN_LED 0
 
 #include "Arduino.h"
 

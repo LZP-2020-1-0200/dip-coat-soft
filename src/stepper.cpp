@@ -27,11 +27,12 @@ void make_step(int phase)
 
 bool go_up_(unsigned long currentMillis, unsigned long *previousMillis, uint16_t *position)
 {
-  if (currentMillis - *previousMillis >= 65)
+  if (currentMillis - *previousMillis >= 4)
   {
-    int ledstate = (*position) % 2 == 0 ? HIGH : LOW;
-    digitalWrite(LEDPIN, ledstate);
-    make_step((*position)++ & 0x3);
+    // int ledstate = (*position) % 2 == 0 ? HIGH : LOW;
+    // digitalWrite(LEDPIN, ledstate);
+    // Inverted
+    make_step((*position)-- & 0x3);
     *previousMillis = currentMillis;
   }
   return !digitalRead(REACHED_TOP_LINE);

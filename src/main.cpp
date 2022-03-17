@@ -3,12 +3,18 @@
 #include "stepper.h"
 
 unsigned long previousMillis = 0;
+unsigned long previousMillisGoUp = 0;
 
 uint32_t passed_time = 0;
 uint32_t total_passed_time = 0;
 uint16_t position = 0;
 uint8_t ledstate = LOW;
 uint8_t currentInputNr = 0;
+
+bool reached_top_bottom = false;
+
+bool reached_top = false;
+bool reached_bottom = false;
 
 void setup()
 {
@@ -22,6 +28,14 @@ void setup()
 
   pinMode(REACHED_TOP_LINE, INPUT);
   pinMode(REACHED_BOTTOM_LINE, INPUT);
+
+  pinMode(UP_LED, OUTPUT);
+  pinMode(DOWN_LED, OUTPUT);
+
+  digitalWrite(UP_LED, LOW);
+  digitalWrite(DOWN_LED, LOW);
+
+  // digitalWrite(DOWN_LED,HIGH);
 
   if (!LittleFS.begin())
   {
@@ -51,7 +65,17 @@ void loop()
   // while paused don't go beyond those lines
   if (paused)
   {
+    Serial.println("paused");
     previousMillis = 0;
+    return;
+  }
+
+  // if go to top pressed move up until reached top
+  if (go_to_top)
+  {
+    go_to_top = go_up_(currentMillis, &previousMillisGoUp, &position);
+    reached_top = !go_to_top;
+    // previousMillis = 0;
     return;
   }
 
@@ -65,11 +89,21 @@ void loop()
     currentInputNr = 0;
     previousMillis = 0;
     clear_inputs();
+    digitalWrite(DOWN_LED, LOW);
+    digitalWrite(UP_LED, LOW);
+      digitalWrite(STEPPER_LINE1, LOW);
+  digitalWrite(STEPPER_LINE2, LOW);
+  digitalWrite(STEPPER_LINE3, LOW);
+  digitalWrite(STEPPER_LINE4, LOW);
+    return;
   }
 
   // if submited in browser
   if (submitted)
   {
+    reached_top = false;
+    reached_bottom = false;
+
     previousMillis = previousMillis ? previousMillis : millis();
     // if current input is hidden that means that programm ended
     if (inputs[currentInputNr].hidden == 1)
@@ -77,6 +111,19 @@ void loop()
       // Serial.println(total_passed_time);
       stopped = true;
       return;
+    }
+
+    if (digitalRead(REACHED_TOP_LINE) && inputs[currentInputNr].direction == -1)
+    {
+      reached_top = true;
+      stopped = true;
+    }
+
+    // if reached top or bottom
+    if (digitalRead(REACHED_BOTTOM_LINE) && inputs[currentInputNr].direction == 1)
+    {
+      reached_bottom = true;
+      stopped = true;
     }
 
     // if interval is bigger than current input interval
@@ -90,9 +137,14 @@ void loop()
       total_passed_time += currentMillis - previousMillis;
 
       previousMillis = currentMillis;
-      ledstate = ledstate == HIGH ? LOW : HIGH;
-      digitalWrite(LEDPIN, ledstate);
+
+      // ledstate = ledstate == HIGH ? LOW : HIGH;
+      // digitalWrite(LEDPIN, ledstate);
+      digitalWrite(inputs[currentInputNr].direction == 1 ? DOWN_LED : UP_LED, HIGH);
+      // digitalWrite(UP_LED, inputs[currentInputNr].direction == -1 ? HIGH : LOW);
+
       position += inputs[currentInputNr].direction;
+
       make_step(position & 0x3);
 
       // If current input sum of time is bigger than calculated continue to the next one
@@ -101,13 +153,9 @@ void loop()
         passed_time = 0;
         currentInputNr++;
         previousMillis = 0;
+        digitalWrite(DOWN_LED, LOW);
+        digitalWrite(UP_LED, LOW);
       }
     }
-  }
-
-  // if go to top pressed move up until reached top
-  if (go_to_top)
-  {
-    go_to_top = go_up_(currentMillis, &previousMillis, &position);
   }
 }

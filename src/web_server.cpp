@@ -61,6 +61,12 @@ void initialize_server()
     server.on("/check_if_paused", HTTP_POST, [](AsyncWebServerRequest *request)
               { request->send(200, "text/plain", paused ? "true" : "false"); });
 
+    server.on("/check_if_reached_top", HTTP_POST, [](AsyncWebServerRequest *request)
+              { request->send(200, "text/plain", reached_top ? "true" : "false"); });
+
+    server.on("/check_if_reached_bottom", HTTP_POST, [](AsyncWebServerRequest *request)
+              { request->send(200, "text/plain", reached_bottom ? "true" : "false"); });
+
     server.on("/get_passed_time", HTTP_POST, [](AsyncWebServerRequest *request)
               { request->send(200, "text/plain", String(total_passed_time)); });
 
@@ -68,7 +74,6 @@ void initialize_server()
               {
                   if (inputs[0].speed)
                   {
-                    //   Serial.println("Sent normal JSON");
                       AsyncResponseStream *response = request->beginResponseStream("application/json");
                       serializeJson(doc, *response);
                       request->send(response);
@@ -76,7 +81,6 @@ void initialize_server()
 
                   else
                   {
-                    //   Serial.println("Sent empty JSON");
                       request->send(200, "application/json", "{}");
                   } });
 
@@ -102,7 +106,8 @@ void initialize_server()
                       inputs[i].hidden = values["hidden"];
                       inputs[i].speed = values["speed"];
                       inputs[i].distance = values["distance"].as<uint32_t>() * 1000;
-                      inputs[i].direction = values["direction"];
+                      // Inverted!
+                      inputs[i].direction = values["direction"].as<int>() * -1;
                       inputs[i].interval = calculate_pause_interval(inputs[i].speed);
                       inputs[i].milli_seconds = calculate_time_needed(inputs[i].distance, inputs[i].speed);
                       i++;

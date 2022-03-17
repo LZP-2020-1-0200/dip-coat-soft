@@ -10,6 +10,9 @@ let is_working = false;
 let is_paused = false;
 let startTime;
 
+let check_top_interval;
+let check_bottom_interval;
+
 function objectEmpty(object) {
     return Object.keys(object).length === 0 && object.constructor === Object;
 }
@@ -17,6 +20,8 @@ function objectEmpty(object) {
 documentReady(() => {
     sessionStorage.inputArray && restoreInputsAfterRefresh();
     getFormattedTimeStringFromInputs();
+    // check_top_interval = setInterval(checkIfReachedTop,5000);
+    // check_bottom_interval = setInterval(checkIfReachedBottom,5000);
 
     fetch("recieve_inputs", { method: 'POST' }).then(response => response.json()).then(response => {
 
@@ -35,7 +40,7 @@ documentReady(() => {
             console.log("Is paused:", response === "true");
             is_paused = response === "true";
             changeInnerHTMLbyID("pause", is_paused ? "Unpause" : "Pause");
-            
+
             if (is_paused) {
                 document.getElementById('pause').disabled = false;
                 document.getElementById('stop').disabled = true;
@@ -55,13 +60,36 @@ documentReady(() => {
             });
         });
 
-    }).then(() => {
-        fetch("send_saved_programms", { method: 'POST' }).then(response => response.json()).then(response => console.log(response));
-        fillModalWithProgramms();
-    });
+    })
+        .then(() => fetch("check_if_reached_top", { method: 'POST' })).then(response => response.text()).then(response => {
+            if (response === "true") {
+                alert("Reached Top");
+                is_working = false;
+                updateButtonStates();
+                progress_percentage = 0;
+                updateProgressBarValues(progress_percentage);
+            }
+        }).then(() => fetch("check_if_reached_bottom", { method: 'POST' })).then(response => response.text()).then(response => {
+            if (response === "true") {
+                alert("Reached Bottom");
+                is_working = false;
+                updateButtonStates();
+                progress_percentage = 0;
+                updateProgressBarValues(progress_percentage);
+            }
+        })
+        .then(() => {
+            fetch("send_saved_programms", { method: 'POST' }).then(response => response.json()).then(response => console.log(response));
+            fillModalWithProgramms();
+        });
 });
 
-let sendToTopRequest = () => fetch("go_to_top", { method: 'POST', }).then(response => response.text()).then(response => alert(response));
+let sendToTopRequest = () => fetch("go_to_top", { method: 'POST', }).then(response => response.text()).then(response => {
+    changeInnerHTMLbyID("go_to_top", response);
+    check_top_interval = setInterval(checkIfReachedTop, 5000);
+
+
+});
 
 let sendStopRequest = () => {
     is_working = false;
@@ -165,6 +193,23 @@ function updateProgressBar() {
                         updateProgressBarValues(progress_percentage);
 
                     }
+                }
+            })
+            .then(() => fetch("check_if_reached_top", { method: 'POST' })).then(response => response.text()).then(response => {
+                if (response === "true") {
+                    alert("Reached Top");
+                    is_working = false;
+                    updateButtonStates();
+                    progress_percentage = 0;
+                    updateProgressBarValues(progress_percentage);
+                }
+            }).then(() => fetch("check_if_reached_bottom", { method: 'POST' })).then(response => response.text()).then(response => {
+                if (response === "true") {
+                    alert("Reached Bottom");
+                    is_working = false;
+                    updateButtonStates();
+                    progress_percentage = 0;
+                    updateProgressBarValues(progress_percentage);
                 }
             });
 
@@ -279,8 +324,6 @@ function submitForm() {
             updateButtonStates();
 
         }));
-
-
 }
 
 async function recieveFromESP8266() {
@@ -407,6 +450,33 @@ async function deleteProgramm(programm_to_delete) {
     let response = await promise.text();
     alert(response);
     fillModalWithProgramms();
+}
 
+async function checkIfReachedTop() {
+    let responest = await fetch("check_if_reached_top", { method: 'POST' });
+    let response_text = await responest.text();
 
+    if (response_text === "true") {
+        alert("Reached Top");
+        changeInnerHTMLbyID("go_to_top", "Go to top");
+        clearInterval(check_top_interval);
+        is_working = false;
+        updateButtonStates();
+        progress_percentage = 0;
+        updateProgressBarValues(progress_percentage);
+    }
+}
+
+async function checkIfReachedBottom() {
+    let responest = await fetch("check_if_reached_bottom", { method: 'POST' });
+    let response_text = await responest.text();
+
+    if (response_text === "true") {
+        alert("Reached Bottom");
+        clearInterval(check_bottom_interval);
+        is_working = false;
+        updateButtonStates();
+        progress_percentage = 0;
+        updateProgressBarValues(progress_percentage);
+    }
 }
