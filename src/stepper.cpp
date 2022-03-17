@@ -25,27 +25,6 @@ void make_step(int phase)
   digitalWrite(STEPPER_LINE4, Q4[phase]);
 }
 
-// void go_to_top_()
-// {
-//   Serial.println("Going top");
-//   uint16_t position = 0;
-//   unsigned long previousMillis = 0;
-//   int ledstate = LOW;
-//   Serial.println(digitalRead(REACHED_TOP_LINE));
-//   while (!digitalRead(REACHED_TOP_LINE))
-//   {
-//     unsigned long currentMillis = millis();
-//     if (currentMillis - previousMillis >= 100)
-//     {
-//       previousMillis = currentMillis;
-//       ledstate = ledstate == HIGH ? LOW : HIGH;
-//       digitalWrite(LEDPIN, ledstate);
-//       make_step(position++ & 0x3);
-//       Serial.println(position);
-//     }
-//   }
-// }
-
 bool go_up_(unsigned long currentMillis, unsigned long *previousMillis, uint16_t *position)
 {
   if (currentMillis - *previousMillis >= 65)
