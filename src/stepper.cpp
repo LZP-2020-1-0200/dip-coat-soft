@@ -1,7 +1,8 @@
 #include "stepper.h"
 #include "web_server.h"
 
-const uint32_t DISTANCE_NM_PER_ROTATION = 320800;
+// const uint32_t DISTANCE_NM_PER_ROTATION = 320800;
+const uint32_t DISTANCE_NM_PER_ROTATION = 83333;
 static const uint8_t Q1[] = {LOW, HIGH, HIGH, LOW};
 static const uint8_t Q2[] = {HIGH, LOW, LOW, HIGH};
 static const uint8_t Q3[] = {LOW, LOW, HIGH, HIGH};

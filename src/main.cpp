@@ -91,10 +91,10 @@ void loop()
     clear_inputs();
     digitalWrite(DOWN_LED, LOW);
     digitalWrite(UP_LED, LOW);
-      digitalWrite(STEPPER_LINE1, LOW);
-  digitalWrite(STEPPER_LINE2, LOW);
-  digitalWrite(STEPPER_LINE3, LOW);
-  digitalWrite(STEPPER_LINE4, LOW);
+    digitalWrite(STEPPER_LINE1, LOW);
+    digitalWrite(STEPPER_LINE2, LOW);
+    digitalWrite(STEPPER_LINE3, LOW);
+    digitalWrite(STEPPER_LINE4, LOW);
     return;
   }
 
