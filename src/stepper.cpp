@@ -28,7 +28,7 @@ uint64_t calculate_time_needed(uint32_t distance, uint32_t speed)
   return round(((double)distance / (double)speed) * 1000);
 }
 
-void make_step(int phase)
+void make_step(uint16_t phase)
 {
   digitalWrite(STEPPER_LINE1, Q1[phase]);
   digitalWrite(STEPPER_LINE2, Q2[phase]);
@@ -38,7 +38,7 @@ void make_step(int phase)
 
 bool go_up_(unsigned long currentMillis, unsigned long *previousMillis, uint16_t *position)
 {
-  if (currentMillis - *previousMillis >= 4)
+  if (currentMillis - *previousMillis >= 4800)
   {
     // int ledstate = (*position) % 2 == 0 ? HIGH : LOW;
     // digitalWrite(LEDPIN, ledstate);

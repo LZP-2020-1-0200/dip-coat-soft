@@ -120,18 +120,18 @@ void loop()
       return;
     }
 
-    // if (digitalRead(REACHED_TOP_LINE) && inputs[currentInputNr].direction == -1)
-    // {
-    //   reached_top = true;
-    //   stopped = true;
-    // }
+    if (digitalRead(REACHED_TOP_LINE) && inputs[currentInputNr].direction == -1)
+    {
+      reached_top = true;
+      stopped = true;
+    }
 
-    // // if reached top or bottom
-    // if (digitalRead(REACHED_BOTTOM_LINE) && inputs[currentInputNr].direction == 1)
-    // {
-    //   reached_bottom = true;
-    //   stopped = true;
-    // }
+    // if reached top or bottom
+    if (digitalRead(REACHED_BOTTOM_LINE) && inputs[currentInputNr].direction == 1)
+    {
+      reached_bottom = true;
+      stopped = true;
+    }
 
     // if interval is bigger than current input interval
     if (currentMillis - previousMillis >= inputs[currentInputNr].interval)
@@ -149,12 +149,12 @@ void loop()
       //  Serial.println(((inputs[currentInputNr].milli_seconds) - passed_time));
       // Total programm sum of time
       
-      Serial.printf("Current millis: %lu\tPrevious millis:%lu\tPassed time:%u\tTime remaining:%u\n",currentMillis,previousMillis,passed_time,inputs[currentInputNr].milli_seconds - passed_time);
+      // Serial.printf("Current millis: %lu\tPrevious millis:%lu\tPassed time:%u\tTime remaining:%u\n",currentMillis,previousMillis,passed_time,inputs[currentInputNr].milli_seconds - passed_time);
 
       previousMillis = currentMillis;
 
-      ledstate = ledstate == HIGH ? LOW : HIGH;
-      digitalWrite(LEDPIN, ledstate);
+      // ledstate = ledstate == HIGH ? LOW : HIGH;
+      // digitalWrite(LEDPIN, ledstate);
       digitalWrite(inputs[currentInputNr].direction == 1 ? DOWN_LED : UP_LED, HIGH);
       // digitalWrite(UP_LED, inputs[currentInputNr].direction == -1 ? HIGH : LOW);
 
