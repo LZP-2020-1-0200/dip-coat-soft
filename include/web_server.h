@@ -11,7 +11,7 @@ typedef struct
     uint32_t speed;
     uint32_t distance;
     int direction;
-    unsigned long interval;
+    uint32_t interval;
     uint32_t milli_seconds;
 } input;
 

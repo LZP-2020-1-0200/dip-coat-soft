@@ -15,7 +15,7 @@
 
 // void go_to_top_();
 void make_step(int);
-uint16_t calculate_pause_interval(uint32_t);
-uint32_t calculate_time_needed(uint32_t, uint32_t);
+uint32_t calculate_pause_interval(uint32_t);
+uint64_t calculate_time_needed(uint32_t, uint32_t);
 bool go_up_(unsigned long , unsigned long * ,  uint16_t *);
 #endif // DEBUG

@@ -15,7 +15,8 @@ void print_input()
 {
     for (input x : inputs)
     {
-        Serial.printf("Hidden: %s\tSpeed: %d\tDistance: %d\tInterval: %lu\tDirection: %s\tTotal Time: %u\n",
+        if (x.hidden == 0)
+            Serial.printf("\nHidden: %s\tSpeed: %d\tDistance: %d\tInterval: %d\tDirection: %s\tTotal Time: %d\n",
                       x.hidden ? "Yes" : "No", x.speed, x.distance, x.interval, x.direction == 1 ? "Up" : "Down", x.milli_seconds);
     }
 }
