@@ -34,8 +34,14 @@ bool go_up_(unsigned long currentMillis, unsigned long *previousMillis, uint16_t
     *previousMillis = currentMillis;
   }
 
-  if (digitalRead(REACHED_TOP_LINE) == false)
+  if (digitalRead(REACHED_TOP_LINE))
+  {
     digitalWrite(UP_LED, LOW);
+    digitalWrite(STEPPER_LINE1, LOW);
+    digitalWrite(STEPPER_LINE2, LOW);
+    digitalWrite(STEPPER_LINE3, LOW);
+    digitalWrite(STEPPER_LINE4, LOW);
+  }
 
   return !digitalRead(REACHED_TOP_LINE);
 }
@@ -49,8 +55,14 @@ bool go_down_(unsigned long currentMillis, unsigned long *previousMillis, uint16
     *previousMillis = currentMillis;
   }
 
-  if (digitalRead(REACHED_BOTTOM_LINE) == false)
+  if (digitalRead(REACHED_BOTTOM_LINE))
+  {
+    digitalWrite(STEPPER_LINE1, LOW);
+    digitalWrite(STEPPER_LINE2, LOW);
+    digitalWrite(STEPPER_LINE3, LOW);
+    digitalWrite(STEPPER_LINE4, LOW);
     digitalWrite(DOWN_LED, LOW);
+  }
 
   return !digitalRead(REACHED_BOTTOM_LINE);
 }

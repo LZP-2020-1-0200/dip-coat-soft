@@ -4,14 +4,13 @@
 
 unsigned long previousMillis = 0;
 unsigned long previousMillisGoUp = 0;
+unsigned long previousMillisGoDown = 0;
 
 uint32_t passed_time = 0;
 uint32_t total_passed_time = 0;
 uint16_t position = 0;
 uint8_t ledstate = LOW;
 uint8_t currentInputNr = 0;
-
-bool reached_top_bottom = false;
 
 bool reached_top = false;
 bool reached_bottom = false;
@@ -71,10 +70,17 @@ void loop()
   }
 
   // if go to top pressed move up until reached top
-  if (go_to_top)
+  if (go_to_top && !stopped)
   {
     go_to_top = go_up_(currentMillis, &previousMillisGoUp, &position);
     reached_top = !go_to_top;
+    return;
+  }
+
+  if (go_to_btm && !stopped)
+  {
+    go_to_btm = go_down_(currentMillis, &previousMillisGoDown, &position);
+    reached_bottom = !go_to_btm;
     return;
   }
 

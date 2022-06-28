@@ -28,6 +28,7 @@ extern bool submitted;
 extern bool paused;
 extern bool stopped;
 extern bool go_to_top;
+extern bool go_to_btm;
 extern uint32_t total_passed_time;
 extern bool reached_top;
 extern bool reached_bottom;

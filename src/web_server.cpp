@@ -8,6 +8,7 @@ input inputs[20];
 StaticJsonDocument<2048> doc;
 bool submitted;
 bool go_to_top;
+bool go_to_btm;
 bool paused = false;
 bool stopped = false;
 
@@ -17,7 +18,7 @@ void print_input()
     {
         if (x.hidden == 0)
             Serial.printf("\nHidden: %s\tSpeed: %d\tDistance: %d\tInterval: %d\tDirection: %s\tTotal Time: %d\n",
-                      x.hidden ? "Yes" : "No", x.speed, x.distance, x.interval, x.direction == 1 ? "Up" : "Down", x.milli_seconds);
+                          x.hidden ? "Yes" : "No", x.speed, x.distance, x.interval, x.direction == 1 ? "Up" : "Down", x.milli_seconds);
     }
 }
 
