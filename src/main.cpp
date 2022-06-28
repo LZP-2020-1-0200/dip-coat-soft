@@ -62,7 +62,6 @@ void loop()
 {
   const unsigned long currentMillis = micros();
 
-
   // while paused don't go beyond those lines
   if (paused)
   {
@@ -76,7 +75,6 @@ void loop()
   {
     go_to_top = go_up_(currentMillis, &previousMillisGoUp, &position);
     reached_top = !go_to_top;
-    // previousMillis = 0;
     return;
   }
 
@@ -99,23 +97,15 @@ void loop()
     return;
   }
 
-  // if submited in browser
+  // if submitted in browser
   if (submitted)
   {
     reached_top = false;
     reached_bottom = false;
 
-    // previousMillis = previousMillis ? previousMillis : micros();
-    //      Serial.println(currentMillis );
-    //   Serial.println(previousMillis);
-
-          // Serial.println(currentMillis - previousMillis );
-
-    
-    // if current input is hidden that means that programm ended
+    // if current input is hidden that means that program ended
     if (inputs[currentInputNr].hidden == 1)
     {
-      // Serial.println(total_passed_time);
       stopped = true;
       return;
     }
@@ -136,31 +126,20 @@ void loop()
     // if interval is bigger than current input interval
     if (currentMillis - previousMillis >= inputs[currentInputNr].interval)
     {
-
-      
-   
-      // Serial.println(inputs[currentInputNr].milli_seconds - (currentMillis - previousMillis));
-      
       // Current input sum of time
-      if (previousMillis && currentMillis > previousMillis){
-        passed_time += (currentMillis - previousMillis)/1000;
-        total_passed_time += (currentMillis - previousMillis)/1000;
+      if (previousMillis && currentMillis > previousMillis)
+      {
+        passed_time += (currentMillis - previousMillis) / 1000;
+        total_passed_time += (currentMillis - previousMillis) / 1000;
       }
-      //  Serial.println(((inputs[currentInputNr].milli_seconds) - passed_time));
-      // Total programm sum of time
-      
-      // Serial.printf("Current millis: %lu\tPrevious millis:%lu\tPassed time:%u\tTime remaining:%u\n",currentMillis,previousMillis,passed_time,inputs[currentInputNr].milli_seconds - passed_time);
 
       previousMillis = currentMillis;
 
-      // ledstate = ledstate == HIGH ? LOW : HIGH;
-      // digitalWrite(LEDPIN, ledstate);
       digitalWrite(inputs[currentInputNr].direction == 1 ? DOWN_LED : UP_LED, HIGH);
-      // digitalWrite(UP_LED, inputs[currentInputNr].direction == -1 ? HIGH : LOW);
 
       position += inputs[currentInputNr].direction;
-
       make_step(position & 0x3);
+
       // If current input sum of time is bigger than calculated continue to the next one
       if (passed_time >= inputs[currentInputNr].milli_seconds)
       {
