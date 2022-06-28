@@ -49,6 +49,11 @@ void initialize_server()
                   go_to_top = true;
                   request->send(200, "text/plain", "Going top"); });
 
+    server.on("/go_to_btm", HTTP_POST, [](AsyncWebServerRequest *request)
+              {
+                  go_to_btm = true;
+                  request->send(200, "text/plain", "Going down"); });
+
     server.on("/pause", HTTP_POST, [](AsyncWebServerRequest *request)
               {
                   paused = !paused;

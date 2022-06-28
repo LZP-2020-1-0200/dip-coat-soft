@@ -85,10 +85,13 @@ documentReady(() => {
 });
 
 let sendToTopRequest = () => fetch("go_to_top", { method: 'POST', }).then(response => response.text()).then(response => {
-    changeInnerHTMLbyID("go_to_top", response);
+    alert(response);
     check_top_interval = setInterval(checkIfReachedTop, 5000);
+});
 
-
+let sendToBtmRequest = () => fetch("go_to_btm", { method: 'POST', }).then(response => response.text()).then(response => {
+    alert(response);
+    check_btm_interval = setInterval(checkIfReachedBottom, 5000);
 });
 
 let sendStopRequest = () => {
@@ -458,7 +461,6 @@ async function checkIfReachedTop() {
 
     if (response_text === "true") {
         alert("Reached Top");
-        changeInnerHTMLbyID("go_to_top", "Go to top");
         clearInterval(check_top_interval);
         is_working = false;
         updateButtonStates();
@@ -473,7 +475,7 @@ async function checkIfReachedBottom() {
 
     if (response_text === "true") {
         alert("Reached Bottom");
-        clearInterval(check_bottom_interval);
+        clearInterval(check_btm_interval);
         is_working = false;
         updateButtonStates();
         progress_percentage = 0;

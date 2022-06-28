@@ -773,10 +773,14 @@
                 Submit and Start
             </button>
             <div aria-label="Toolbar with button groups" class="btn-toolbar" role="toolbar" style="display: inline">
-                <button class="btn btn-primary" id="go_to_top" name="foo" onclick="sendToTopRequest()" type="button"
-                  value="go_to_top">Go to the
-                    top
+                <button class="btn btn-primary" id="go_to_top" name="go_to_top" onclick="sendToTopRequest()"
+                  type="button" value="go_to_top">Go to top
                 </button>
+
+                <button class="btn btn-primary" id="go_to_btm" name="go_to_btm" onclick="sendToBtmRequest()"
+                  type="button" value="go_to_btm">Go to bottom
+                </button>
+
                 <button class="btn btn-warning" disabled id="pause" name="pause" onclick="sendPauseRequest()"
                   type="button" value="pause">Pause
                 </button>
