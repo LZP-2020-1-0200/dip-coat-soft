@@ -194,6 +194,7 @@ function updateProgressBar() {
                         updateButtonStates();
                         progress_percentage = 0;
                         updateProgressBarValues(progress_percentage);
+                        alert("Successfully finished");
 
                     }
                 }
