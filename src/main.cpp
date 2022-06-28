@@ -89,6 +89,8 @@ void loop()
   {
     stopped = false;
     submitted = false;
+    go_to_btm = false;
+    go_to_top = false;
     total_passed_time = 0;
     passed_time = 0;
     currentInputNr = 0;

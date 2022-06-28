@@ -228,7 +228,7 @@ async function updateButtonStates() {
 
     console.log(elements);
     document.getElementById('pause').disabled = !is_working;
-    document.getElementById('stop').disabled = !is_working;
+    // document.getElementById('stop').disabled = !is_working;
     document.getElementById('add_row').disabled = is_working;
     document.getElementById('hide_row').disabled = is_working;
     document.getElementById('go_to_top').disabled = is_working;
