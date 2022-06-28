@@ -11,7 +11,7 @@ let is_paused = false;
 let startTime;
 
 let check_top_interval;
-let check_bottom_interval;
+let check_btm_interval;
 
 function objectEmpty(object) {
     return Object.keys(object).length === 0 && object.constructor === Object;
@@ -20,8 +20,6 @@ function objectEmpty(object) {
 documentReady(() => {
     sessionStorage.inputArray && restoreInputsAfterRefresh();
     getFormattedTimeStringFromInputs();
-    // check_top_interval = setInterval(checkIfReachedTop,5000);
-    // check_bottom_interval = setInterval(checkIfReachedBottom,5000);
 
     fetch("recieve_inputs", { method: 'POST' }).then(response => response.json()).then(response => {
 
@@ -85,11 +83,15 @@ documentReady(() => {
 });
 
 let sendToTopRequest = () => fetch("go_to_top", { method: 'POST', }).then(response => response.text()).then(response => {
+    document.getElementById('go_to_top').disabled = true;
+    document.getElementById('go_to_btm').disabled = true;
     alert(response);
     check_top_interval = setInterval(checkIfReachedTop, 5000);
 });
 
 let sendToBtmRequest = () => fetch("go_to_btm", { method: 'POST', }).then(response => response.text()).then(response => {
+    document.getElementById('go_to_top').disabled = true;
+    document.getElementById('go_to_btm').disabled = true;
     alert(response);
     check_btm_interval = setInterval(checkIfReachedBottom, 5000);
 });
@@ -236,6 +238,7 @@ async function updateButtonStates() {
     document.getElementById('add_row').disabled = is_working;
     document.getElementById('hide_row').disabled = is_working;
     document.getElementById('go_to_top').disabled = is_working;
+    document.getElementById('go_to_btm').disabled = is_working;
     document.getElementById('submit').disabled = is_working;
     document.getElementById('save_modal_btn').disabled = is_working;
     document.getElementById('send_modal_btn').disabled = is_working;
@@ -461,8 +464,9 @@ async function checkIfReachedTop() {
     let response_text = await responest.text();
 
     if (response_text === "true") {
-        alert("Reached Top");
         clearInterval(check_top_interval);
+        alert("Reached Top");
+
         is_working = false;
         updateButtonStates();
         progress_percentage = 0;
@@ -475,8 +479,8 @@ async function checkIfReachedBottom() {
     let response_text = await responest.text();
 
     if (response_text === "true") {
-        alert("Reached Bottom");
         clearInterval(check_btm_interval);
+        alert("Reached Bottom");
         is_working = false;
         updateButtonStates();
         progress_percentage = 0;
