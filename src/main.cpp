@@ -9,7 +9,6 @@ unsigned long previousMillisGoDown = 0;
 uint32_t passed_time = 0;
 uint32_t total_passed_time = 0;
 uint16_t position = 0;
-uint8_t ledstate = LOW;
 uint8_t currentInputNr = 0;
 
 bool reached_top = false;
@@ -33,8 +32,6 @@ void setup()
 
   digitalWrite(UP_LED, LOW);
   digitalWrite(DOWN_LED, LOW);
-
-  // digitalWrite(DOWN_LED,HIGH);
 
   if (!LittleFS.begin())
   {
